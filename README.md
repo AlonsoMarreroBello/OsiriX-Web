@@ -1,17 +1,17 @@
 # OsiriX-Web
 
-# Como arrancar el proyecto
+## How to start the project
 
-Para arrancar el proyecto, primero debes instalar las dependencias de npm:
+To start the project, you must first install the npm dependencies:
 
 ```bash
 npm install
 ```
 
-Luego, para arrancar el proyecto, ejecuta el siguiente comando:
+Then, to start the project, run the following command:
 
 ```bash
 npm run dev
 ```
 
-Este comando iniciará un servidor de desarrollo en el puerto 5173 y abrirá una ventana del navegador con el sitio web.
+This command will start a development server on port 5173 and open a browser window with the web site.
