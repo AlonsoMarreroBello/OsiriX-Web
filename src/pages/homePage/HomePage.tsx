@@ -1,6 +1,5 @@
 import "./HomePage.css";
-import logo from "../../assets/OsiriX-Logo.png";
-import { Link } from "react-router-dom";
+import CustomHeader from "../../components/CustomHeader/CustomHeader";
 
 const HomePage = () => {
   const windowsInstallerUrl = "/installers/YourAppSetup.exe";
@@ -9,24 +8,9 @@ const HomePage = () => {
 
   return (
     <div className="container">
-      <header className="container-header">
-        <img src={logo} alt={`Osirix Logo`} />
-        <span>
-          <h1>OsiriX</h1>
-        </span>
-        <ul>
-          <li>
-            <Link to="/features">Características</Link>
-          </li>
-          <li>
-            <Link to="/download">Descarga</Link>
-          </li>
-          <li>
-            <Link to="/publishers">Portal de publisher</Link>
-          </li>
-        </ul>
-      </header>
-
+      <div className="customHeader">
+        <CustomHeader />
+      </div>
       <main>
         <div className="container-main">
           <h2>¿Qué es OsiriX?</h2>

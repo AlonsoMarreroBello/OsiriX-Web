@@ -6,47 +6,6 @@
   align-items: center;
 }
 
-.container-header {
-  background-color: #001C55;
-  display: flex;
-  color: white;
-  width: 100%;
-  position: fixed;
-  margin-bottom: 40px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.container-header img {
-  height: 48px;
-  scale: 1.2;
-  margin: 0 1rem;
-}
-
-.container-header h1 {
-  margin: 0;
-  font-size: 2.5em;
-}
-
-.container-header ul {
-  display: flex;
-  flex-direction: row;
-}
-
-.container-header li {
-  margin-right: 1rem;
-  list-style: none;
-}
-
-.container-header li a {
-  color: #A6E1FA;
-}
-
-.container-header li a:hover {
-  color: white;
-  transition: all 0.3s ease-in-out;
-}
-
 main {
   margin-top: 8em;
   width: 80%;
