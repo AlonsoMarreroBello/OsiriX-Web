@@ -1,0 +1,142 @@
+.container {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-header {
+  background-color: #001C55;
+  display: flex;
+  color: white;
+  width: 100%;
+  position: fixed;
+  margin-bottom: 40px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container-header img {
+  height: 48px;
+  scale: 1.2;
+  margin: 0 1rem;
+}
+
+.container-header h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+.container-header ul {
+  display: flex;
+  flex-direction: row;
+}
+
+.container-header li {
+  margin-right: 1rem;
+  list-style: none;
+}
+
+.container-header li a {
+  color: #A6E1FA;
+}
+
+.container-header li a:hover {
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+main {
+  margin-top: 8em;
+  width: 80%;
+}
+
+.container-main {
+  background-color: #ffffff;
+  padding: 1em 0.5em;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  color: #555;
+  margin: auto;
+}
+
+.container-main h2 {
+  color: #3498db;
+  margin-top: 0;
+  font-size: 2em;
+}
+
+.container-main h3 {
+  margin: 1rem;
+  font-weight: normal;
+}
+
+.container-main p {
+  font-size: 1.1em;
+  margin-bottom: 1.5rem;
+}
+
+.download-section {
+  margin-top: 1rem;
+}
+
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.download-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  min-width: 220px;
+}
+
+.download-button:hover {
+  background-color: #2980b9;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.download-button:active {
+  transform: translateY(0);
+}
+
+.os-icon {
+  margin-right: 8px;
+}
+
+.version {
+  margin-top: 1.5rem;
+  font-size: 0.9em;
+  color: "#777"
+}
+
+.container-footer {
+  padding: 0;
+  color: #7f8c8d;
+  background-color: #001C55;
+  font-size: 0.9em;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+@media (min-width: 600px) {
+  .download-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
