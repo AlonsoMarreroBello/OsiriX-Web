@@ -1,8 +1,11 @@
 import style from "./PublisherPortalPage.module.css";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import InputField from "../../components/InputField/InputField";
+import { useNavigate } from "react-router-dom";
 
 const PublisherPortalPage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className={style.CustomHeader}>
@@ -30,7 +33,7 @@ const PublisherPortalPage = () => {
               </div>
               <button className={style.button}>Solicitar unirse</button>
               <p>
-                Ya tienes cuenta? <a href="/login">Iniciar sesión</a>
+                Ya tienes cuenta? <a onClick={() => navigate("/login")}>Iniciar sesión</a>
               </p>
             </div>
           </div>
