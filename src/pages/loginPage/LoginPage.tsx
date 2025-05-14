@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./LoginPage.module.css";
 import InputField from "../../components/InputField/InputField";
-import authService from "../../services/authService";
+import authService from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import logoUrl from "../../assets/OsiriX-Logo.png";
@@ -28,7 +28,7 @@ const LoginPage = () => {
       console.log(user, "log");
       await authService.login({ ...user, origin: "WEB" });
       if (authService.getToken()) {
-        navigate("/");
+        navigate("/home");
       }
     } catch (error) {
       console.error(error);
