@@ -5,12 +5,70 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #00072D;
+  background-color: var(--color-bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* ---- COLORES BASE OSCUROS ---- */
+  --color-bg-primary: #1A1D21;
+  --color-bg-secondary: #2C303A;
+  --color-bg-tertiary: #252932;
+  --color-bg-header: #111316;
+  --color-bg-footer: #111316;
+  --color-bg-input: #3E474F;
+
+  /* ---- COLORES DE TEXTO ---- */
+  --color-text-primary: #EAEAEA;
+  --color-text-secondary: #CDD3DA;
+  --color-text-tertiary: #B0BEC5;
+  --color-text-placeholder: #8798A0;
+  --color-text-on-accent-vibrant: #FFFFFF;
+  /* Texto blanco sobre verde vibrante */
+  --color-text-on-pastel: #283d41;
+  --color-text-inverse: #1B2631;
+  --color-text-headings-light: #FFFFFF;
+
+  /* ---- COLORES DE ACENTO - VERDE VIBRANTE (Para CTAs de descarga y highlights selectos) ---- */
+  --color-accent-vibrant-green-main: #2ECC71;
+  /* Verde Esmeralda (el que usábamos como "legible") */
+  --color-accent-vibrant-green-dark: #28B463;
+  --color-accent-vibrant-green-darker: #239B56;
+  --color-accent-vibrant-green-shadow: rgba(46, 204, 113, 0.25);
+  /* Sombra más sutil */
+  --color-accent-vibrant-green-shadow-hover: rgba(46, 204, 113, 0.35);
+
+  /* ---- COLORES DE ACENTO - PASTEL (AZUL HIELO - acento principal de UI) ---- */
+  --color-accent-pastel-main: #A0D2DB;
+  --color-accent-pastel-dark: #8EC1C9;
+  --color-accent-pastel-border: #8BBBC4;
+  --color-accent-pastel-shadow: rgba(160, 210, 219, 0.2);
+  --color-accent-pastel-shadow-hover: rgba(142, 193, 201, 0.3);
+  --color-accent-pastel-text-link: #BCE3EA;
+
+  /* ---- COLORES DE ACENTO - SECUNDARIO (AZUL CIELO - para títulos informativos) ---- */
+  --color-accent-secondary-main: #82AAFF;
+  --color-accent-secondary-dark: #A6E1FA;
+  /* Borde de sección descarga vuelve a un azul para no ser tan dominante con verde */
+  --color-accent-secondary-border: var(--color-accent-secondary-dark);
+
+  /* ---- COLORES DE BORDE ---- */
+  --color-border-primary: #393E46;
+  --color-border-secondary: #525D66;
+  --color-border-footer: #2C303A;
+
+  /* ... (Otros, Tamaños, Border Radius sin cambios) ... */
+  --color-white: #FFFFFF;
+  --header-height: 70px;
+  --footer-height: 70px;
+  --border-radius-small: 8px;
+  --border-radius-medium: 10px;
+  --border-radius-large: 12px;
+  --border-radius-xlarge: 16px;
+  --shadow-default: rgba(0, 0, 0, 0.2);
+
 }
 
 a {
@@ -27,7 +85,6 @@ body {
   margin: 0;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 main {

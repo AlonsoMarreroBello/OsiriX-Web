@@ -1,36 +1,168 @@
 .containerMain {
+  /* Este es el contenedor principal dentro de <main> */
   display: flex;
   flex-direction: column;
+  /* Apila elementos internos verticalmente */
   align-items: center;
+  /* Centra horizontalmente su contenido (OptionsContainer) */
   justify-content: center;
+  /* Centra verticalmente su contenido si containerMain tiene altura */
   width: 100%;
-  height: 100%;
+  /* height: 100%; // Quitar height: 100% a menos que el padre (main) tenga altura definida y quieras que se estire */
 }
 
 .OptionsContainer {
   display: flex;
-  width: fit-content;
-  margin: auto;
-  padding: 3rem;
-  flex-direction: row;
-  background-color: #0a2572;
+  flex-wrap: wrap;
+  /* Permite que los items pasen a la siguiente línea */
+  justify-content: center;
+  /* Centra los items, especialmente la última fila */
   gap: 2rem;
-  border: 1px solid #a6e1fa;
-  border-radius: 1rem;
+  /* Espacio entre los items */
+
+  padding: 2.5rem;
+  /* Padding interno */
+  background-color: var(--color-bg-secondary);
+  /* Fondo oscuro para el contenedor */
+  border: 1px solid var(--color-border-primary);
+  /* Borde sutil oscuro */
+  border-radius: var(--border-radius-xlarge);
+  /* Bordes redondeados (ej. 16px) */
+  box-shadow: 0 8px 25px var(--shadow-default);
+  /* Sombra por defecto */
+
+  /* Ancho del contenedor para permitir 3 items de aprox. 12-15rem */
+  /* Si item width es 12rem: (12*3) + (2*2 gaps) + (2.5*2 padding) = 36+4+5 = 45rem */
+  /* Si item width es 15rem: (15*3) + (2*2 gaps) + (2.5*2 padding) = 45+4+5 = 54rem */
+  width: 100%;
+  /* Ocupa el ancho disponible */
+  max-width: 54rem;
+  /* Límite para 3 items de 15rem (o ajusta si .item tiene otro width) */
+  /* margin: auto; Ya no es necesario si .containerMain o main lo centran */
 }
 
 .item {
-  padding: 1rem;
-  width: 10rem;
+  background-color: var(--color-bg-tertiary);
+  /* Fondo para cada tarjeta item */
+  padding: 1.5rem;
+  /* Padding interno del item */
+  border-radius: var(--border-radius-large);
+  /* ej. 12px */
+  border: 1px solid var(--color-border-secondary);
+  /* Borde sutil para el item */
+
+  /* Flexbox properties para el item: */
+  flex-basis: 15rem;
+  /* Ancho base deseado del item (ajusta si es necesario) */
+  flex-grow: 0;
+  /* No crece */
+  flex-shrink: 0;
+  /* No se encoge, fuerza el wrap */
+  /* width: 10rem; Tu width original. Si lo prefieres, usa este y ajusta el max-width de OptionsContainer */
+  /* Si usas width: 10rem, max-width de OptionsContainer: (10*3)+(2*2)+(2.5*2) = 30+4+5 = 39rem */
+
+  min-height: 12rem;
+  /* Altura mínima para consistencia */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Título arriba, botón abajo */
+  align-items: center;
+  /* Centra contenido horizontalmente */
+  text-align: center;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  box-sizing: border-box;
 }
 
-.itemTitle {font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
+.item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px var(--color-accent-vibrant-green-shadow);
+  /* Sombra verde en hover */
+}
+
+.itemTitle {
+  font-size: 1.4em;
+  /* Ligeramente más grande */
+  font-weight: 600;
+  /* Un poco menos bold que 'bold' puro */
+  color: var(--color-text-primary);
+  /* Texto claro */
+  margin-bottom: 1.5rem;
+  /* Espacio antes del botón */
+  line-height: 1.3;
 }
 
 .itemButton {
-  background-color: #0e6ba866;
-  border: 1px solid #a6e1fa;
-  color: #a6e1fa;
+  background-color: var(--color-accent-pastel-main);
+  /* Azul Hielo Pastel por defecto */
+  border: none;
+  /* Sin borde para un look más limpio */
+  color: var(--color-text-on-pastel);
+  /* Texto oscuro sobre pastel */
+  padding: 0.75rem 1.5rem;
+  /* Padding del botón */
+  font-size: 0.95em;
+  font-weight: 600;
+  border-radius: var(--border-radius-small);
+  /* ej. 8px */
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  width: 85%;
+  /* Ancho del botón dentro del .item */
+  margin-top: auto;
+  /* Empuja el botón hacia abajo */
+  box-shadow: 0 2px 4px var(--color-accent-pastel-shadow);
+  /* Sombra pastel sutil */
+}
+
+.itemButton:hover,
+.itemButton:focus {
+  background-color: var(--color-accent-vibrant-green-main);
+  /* Verde vibrante en hover/focus */
+  color: var(--color-text-on-accent-vibrant);
+  /* Texto blanco o muy oscuro para contraste */
+  transform: scale(1.03);
+  /* Ligero zoom y levantamiento */
+  box-shadow: 0 4px 10px var(--color-accent-vibrant-green-shadow-hover);
+  /* Sombra verde más intensa */
+  outline: none;
+}
+
+.itemButton:active {
+  background-color: var(--color-accent-vibrant-green-dark);
+  /* Verde más oscuro al presionar */
+  transform: scale(1);
+  box-shadow: 0 2px 5px var(--color-accent-vibrant-green-shadow);
+}
+
+/* Media Queries para responsividad */
+/* Basado en un item de flex-basis: 15rem */
+@media (max-width: 58rem) {
+
+  /* Aprox. cuando no caben 3 items de 15rem (54rem de contenido + algo de margen de viewport) */
+  .OptionsContainer {
+    max-width: calc((15rem * 2) + (2rem * 1) + (2.5rem * 2));
+    /* Para 2 items: 30+2+5 = 37rem */
+  }
+}
+
+@media (max-width: 41rem) {
+
+  /* Aprox. cuando no caben 2 items de 15rem (37rem de contenido + algo de margen de viewport) */
+  .OptionsContainer {
+    max-width: calc((15rem * 1) + (2.5rem * 2));
+    /* Para 1 item: 15+5 = 20rem */
+    /* O si quieres que ocupe más en móvil: */
+    /* max-width: 90%; */
+    /* padding: 2rem 1rem; */
+    /* Ajustar padding si es necesario */
+  }
+
+  /* Opcional: hacer que el item ocupe más si solo hay una columna */
+  /*
+  .item {
+    flex-basis: 100%; // O un % como 90%
+    max-width: 20rem; // Un max-width para el item individual en una sola columna
+  }
+  */
 }

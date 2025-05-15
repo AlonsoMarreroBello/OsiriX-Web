@@ -26,15 +26,15 @@ const UserHomePage = () => {
               </button>
             </div>
             <div className={styles.item}>
-              <h2 className={styles.itemTitle}>Gestionar aplicaciones</h2>
-              <button onClick={() => navigate("/aplication-manager")} className={styles.itemButton}>
-                Aplicaciones
-              </button>
-            </div>
-            <div className={styles.item}>
               <h2 className={styles.itemTitle}>Gestionar desarolladoras</h2>
               <button onClick={() => navigate("/developer-manager")} className={styles.itemButton}>
                 Desarolladoras
+              </button>
+            </div>
+            <div className={styles.item}>
+              <h2 className={styles.itemTitle}>Gestionar aplicaciones</h2>
+              <button onClick={() => navigate("/aplication-manager")} className={styles.itemButton}>
+                Aplicaciones
               </button>
             </div>
             <div className={styles.item}>
