@@ -6,6 +6,7 @@ import LoginPage from "./pages/loginPage/LoginPage";
 import UserHomePage from "./pages/userHomePage/UserHomePage";
 import RequestManagerPage from "./pages/requestManager/RequestManagerPage";
 import UserManagerPage from "./pages/userManagerPage/UserManagerPage";
+import DeveloperManagerPage from "./pages/developerManagerPage/DeveloperManagerPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/home" element={<UserHomePage />} />
           <Route path="/request-manager" element={<RequestManagerPage />} />
           <Route path="/user-manager" element={<UserManagerPage />} />
+          <Route path="/developer-manager" element={<DeveloperManagerPage />} />
         </Routes>
       </BrowserRouter>
     </>
