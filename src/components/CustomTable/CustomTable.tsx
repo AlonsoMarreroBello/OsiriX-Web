@@ -10,7 +10,6 @@ const IconSortAsc = () => <>▲</>;
 const IconSortDesc = () => <>▼</>;
 const IconSortDefault = () => <>↕</>;
 
-// --- Componente CustomTable ---
 const CustomTable = <T extends BaseDataRow>({
   columns,
   data,
@@ -20,7 +19,6 @@ const CustomTable = <T extends BaseDataRow>({
 }: CustomTableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(initialPageSize);
-  // Eliminado: const [selectedRows, setSelectedRows] = useState<Set<string | number>>(new Set());
   const [sortConfig, setSortConfig] = useState<SortConfig<T>>({
     key: null,
     direction: "ascending",
@@ -33,10 +31,6 @@ const CustomTable = <T extends BaseDataRow>({
   }, [data, currentPage, pageSize]);
 
   const totalPages = Math.ceil(data.length / pageSize);
-
-  // Eliminado: handleSelectRow
-  // Eliminado: handleSelectAll
-  // Eliminado: isPageCompletelySelected
 
   const sortedData = useMemo(() => {
     const sortableItems = [...paginatedData];
@@ -106,8 +100,7 @@ const CustomTable = <T extends BaseDataRow>({
     return String(value);
   };
 
-  // Calcula el colSpan para el mensaje "No hay datos"
-  const colSpanNoRows = columns.length; // Sin la columna de checkbox
+  const colSpanNoRows = columns.length;
 
   return (
     <div className={styles.tableWrapper}>
