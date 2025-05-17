@@ -4,6 +4,7 @@ import HomePage from "./pages/homePage/HomePage";
 import PublisherPortalPage from "./pages/publisherPortalPage/PublisherPortalPage";
 import LoginPage from "./pages/loginPage/LoginPage";
 import UserHomePage from "./pages/userHomePage/UserHomePage";
+import RequestManagerPage from "./pages/requestManager/RequestManagerPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/publishers" element={<PublisherPortalPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<UserHomePage />} />
+          <Route path="/request-manager" element={<RequestManagerPage />} />
         </Routes>
       </BrowserRouter>
     </>
