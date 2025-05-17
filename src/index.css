@@ -69,6 +69,13 @@
   --border-radius-xlarge: 16px;
   --shadow-default: rgba(0, 0, 0, 0.2);
 
+  /* error */
+  --color-error-bg: rgba(229, 62, 62, 0.1);
+  --color-error-main: #E53E3E;
+  --color-error-dark: #B71C1C;
+  --color-error-light: #F8A9A9;
+  --color-error-lighter: #FDE2E2;
+  --color-error-shadow: rgba(229, 62, 62, 0.25);
 }
 
 a {
