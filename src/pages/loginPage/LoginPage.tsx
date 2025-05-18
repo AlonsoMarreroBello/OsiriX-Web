@@ -8,6 +8,7 @@ import logoUrl from "../../assets/OsiriX-Logo.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [user, setUser] = useState({
     email: "",
@@ -25,11 +26,21 @@ const LoginPage = () => {
     event.preventDefault();
 
     try {
-      console.log(user, "log");
-      await authService.login({ ...user, origin: "WEB" });
-      if (authService.getToken()) {
-        navigate("/home");
-      }
+      authService
+        .login({ ...user, origin: "WEB" })
+        .then(() => {
+          if (authService.getUserTypeFromToken() === "USER") {
+            setError("Usuario no autorizado");
+            setTimeout(() => {
+              setError("");
+            }, 3000);
+          } else {
+            navigate("/home");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
       console.error(error);
     }
@@ -65,6 +76,7 @@ const LoginPage = () => {
               <a href="#" className={styles.forgotPassword}>
                 ¿Has olvidado la contraseña?
               </a>
+              {error && <p className={styles.error}>{error}</p>}
               <Button type="submit" variant="contained" className={styles.loginButton}>
                 Iniciar Sesión
               </Button>

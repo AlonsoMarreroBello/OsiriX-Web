@@ -2,8 +2,19 @@ import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
 import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./RequestManagerPage.module.css";
+import NewRequestModal from "../../components/NewRequestModal/NewRequestModal";
+import { useState } from "react";
 
 const RequestManagerPage = () => {
+  const [isOpenNewRequestModal, setIsOpenNewRequestModal] = useState(false);
+  const [requestToManage, setRequestToManage] = useState<RequestData>({
+    id: 0,
+    user: "",
+    requestTitle: "",
+    requestStatus: "",
+    requestDate: "",
+  });
+
   interface RequestData extends BaseDataRow {
     id: number;
     user: string;
@@ -36,6 +47,10 @@ const RequestManagerPage = () => {
             onClick={(e) => {
               e.stopPropagation();
               console.log(" Ver ", row);
+              activateNewRequestModal(row.id);
+              if (row.requestStatus === "Aceptada") {
+                setIsOpenNewRequestModal(false);
+              }
             }}
           >
             Gestionar
@@ -101,6 +116,16 @@ const RequestManagerPage = () => {
     console.log("Clic en fila (global), ID:", id);
   };
 
+  const activateNewRequestModal = (id?: string | number) => {
+    setIsOpenNewRequestModal(true);
+    if (id) {
+      const request = userData.find((request) => request.id === id);
+      if (request) {
+        setRequestToManage(request);
+      }
+    }
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -108,10 +133,14 @@ const RequestManagerPage = () => {
         <main className={styles.main}>
           <div className={styles.titleContainer}>
             <h2 className={styles.title}>Solicitudes</h2>
+            <button onClick={() => activateNewRequestModal()} className={styles.newRequestButton}>
+              Nueva solicitud
+            </button>
           </div>
           <div className={styles.tableCard}>
             <CustomTable columns={userColumns} data={userData} onRowClick={handleGlobalRowClick} />
           </div>
+          {isOpenNewRequestModal && <NewRequestModal requestToManage={requestToManage} />}
         </main>
       </div>
     </>

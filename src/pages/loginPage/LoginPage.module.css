@@ -80,3 +80,11 @@
 .forgotPassword:hover {
   text-decoration: underline;
 }
+
+.error {
+  background-color: var(--color-error-bg);
+  color: var(--color-error-main);
+  padding: 10px;
+
+  border-radius: var(--border-radius-small);
+}

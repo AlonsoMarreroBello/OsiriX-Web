@@ -12,11 +12,19 @@ export interface AuthLoginResponseDto {
   tokenType: string;
 }
 
+export interface Role {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export interface DecodedToken {
   sub: string;
   iat: number;
   exp: number;
   userId: number;
+  userType: string;
+  roles: Role[];
 }
 
 const API_PORT = "http://localhost:8080/api/v1";
@@ -24,8 +32,11 @@ const API_PORT = "http://localhost:8080/api/v1";
 const login = async (credentials: AuthLoginRequestDto) => {
   try {
     const response = await axios.post(`${API_PORT}/auth/login`, credentials);
-    localStorage.setItem("token", response.data.data.token);
-    console.log("token", response);
+    if (response.data.data.token.userType !== "USER") {
+      localStorage.setItem("token", response.data.data.token);
+    } else {
+      clearToken();
+    }
   } catch (error) {
     console.error(error);
   }
@@ -39,7 +50,6 @@ const getUsernameFromToken = () => {
   const token = getToken();
   if (token) {
     const tokenData: DecodedToken = jwtDecode(token);
-    console.log(tokenData);
     return tokenData.sub;
   }
 };
@@ -48,8 +58,26 @@ const getUserIdFromToken = () => {
   const token = getToken();
   if (token) {
     const tokenData: DecodedToken = jwtDecode(token);
-    console.log(tokenData, "service userId");
     return tokenData.userId;
+  }
+};
+
+const getUserTypeFromToken = () => {
+  const token = getToken();
+  if (token) {
+    const tokenData: DecodedToken = jwtDecode(token);
+    return tokenData.userType;
+  }
+};
+
+const getUserRolesFromToken = () => {
+  const token = getToken();
+  if (token) {
+    const tokenData: DecodedToken = jwtDecode(token);
+    if (tokenData.roles == null || tokenData.roles === undefined) {
+      return [];
+    }
+    return tokenData.roles;
   }
 };
 
@@ -59,5 +87,7 @@ const authService = {
   clearToken,
   getUsernameFromToken,
   getUserIdFromToken,
+  getUserTypeFromToken,
+  getUserRolesFromToken,
 };
 export default authService;

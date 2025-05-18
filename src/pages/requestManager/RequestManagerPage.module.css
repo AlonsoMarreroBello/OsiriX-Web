@@ -14,6 +14,25 @@
 
 .titleContainer {
   border-bottom: 1px solid var(--color-accent-pastel-border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.titleContainer button {
+  background-color: var(--color-accent-pastel-shadow);
+  color: var(--color-accent-pastel-main);
+  border: none;
+  padding: 0.7rem;
+  height: fit-content;
+  margin-right: 1rem;
+  position: relative;
+  top: 1rem;
+
+  &:hover {
+    background-color: var(--color-accent-pastel-shadow-hover);
+    color: var(--color-accent-pastel-main-hover);
+    transform: scale(1.1);
+  }
 }
 
 .title {
