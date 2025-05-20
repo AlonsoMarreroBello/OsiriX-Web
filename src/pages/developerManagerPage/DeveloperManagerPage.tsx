@@ -2,16 +2,12 @@
 import { useState } from "react";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
-import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
+import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./DeveloperManagerPage.module.css";
 import InputField from "../../components/InputField/InputField";
+import { DeveloperData } from "../../interfaces/Developer.interface";
 
 const DeveloperManagerPage = () => {
-  interface DeveloperData extends BaseDataRow {
-    id: number;
-    developer: string;
-  }
-
   const developerColumns: TableColumn<DeveloperData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 10, sortable: true },
     { type: "data", field: "developer", headerName: "Developer", width: "auto", sortable: true },

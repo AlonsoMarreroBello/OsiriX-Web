@@ -1,33 +1,25 @@
 import { useState } from "react";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
-import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
+import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./CategoryManagerPage.module.css";
+import { CategoryData } from "../../interfaces/Category.interface";
 
 const CategoryManagerPage = () => {
-  // Definición del tipo para categoryType
-  type CategoryType = "game" | "app";
-
-  interface CategoryData extends BaseDataRow {
-    id: number;
-    category: string;
-    categoryType: CategoryType;
-  }
-
   const initialCategoryData: CategoryData[] = [
     {
       id: 1,
-      category: "FPS",
+      name: "FPS",
       categoryType: "game",
     },
     {
       id: 2,
-      category: "Estrategia",
+      name: "Estrategia",
       categoryType: "game",
     },
     {
       id: 3,
-      category: "Productividad",
+      name: "Productividad",
       categoryType: "app",
     },
   ];
@@ -35,19 +27,15 @@ const CategoryManagerPage = () => {
   const [categoriesData, setCategoriesData] = useState<CategoryData[]>(initialCategoryData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
-  const [formData, setFormData] = useState<{
-    id: number | null;
-    categoryName: string;
-    categoryType: CategoryType;
-  }>({
+  const [formData, setFormData] = useState<CategoryData>({
     id: null,
-    categoryName: "",
+    name: "",
     categoryType: "game",
   });
 
   const categoryColumns: TableColumn<CategoryData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 10, sortable: true },
-    { type: "data", field: "category", headerName: "Categoría", width: "auto", sortable: true },
+    { type: "data", field: "name", headerName: "Categoría", width: "auto", sortable: true },
     {
       type: "data",
       field: "categoryType",
@@ -92,7 +80,7 @@ const CategoryManagerPage = () => {
     setModalMode("add");
     setFormData({
       id: null,
-      categoryName: "",
+      name: "",
       categoryType: "game",
     });
     setIsModalOpen(true);
@@ -102,7 +90,7 @@ const CategoryManagerPage = () => {
     setModalMode("edit");
     setFormData({
       id: category.id,
-      categoryName: category.category,
+      name: category.name,
       categoryType: category.categoryType,
     });
     setIsModalOpen(true);
@@ -121,15 +109,15 @@ const CategoryManagerPage = () => {
   };
 
   const handleSaveCategory = () => {
-    if (!formData.categoryName.trim()) {
+    if (!formData.name.trim()) {
       alert("El nombre de la categoría no puede estar vacío.");
       return;
     }
 
     if (modalMode === "add") {
       const newCategory: CategoryData = {
-        id: categoriesData.length > 0 ? Math.max(...categoriesData.map((c) => c.id)) + 1 : 1, // Simple ID generation
-        category: formData.categoryName,
+        id: null,
+        name: formData.name,
         categoryType: formData.categoryType,
       };
       setCategoriesData((prev) => [...prev, newCategory]);
@@ -137,7 +125,7 @@ const CategoryManagerPage = () => {
       setCategoriesData((prev) =>
         prev.map((cat) =>
           cat.id === formData.id
-            ? { ...cat, category: formData.categoryName, categoryType: formData.categoryType } // Preserva la descripción original
+            ? { ...cat, category: formData.name, categoryType: formData.categoryType } // Preserva la descripción original
             : cat
         )
       );
@@ -172,12 +160,12 @@ const CategoryManagerPage = () => {
             <h3>{modalMode === "add" ? "Añadir Nueva Categoría" : "Editar Categoría"}</h3>
 
             <div className={styles.modalFormField}>
-              <label htmlFor="categoryName">Nombre de la Categoría:</label>
+              <label htmlFor="name">Nombre de la Categoría:</label>
               <input
                 type="text"
-                id="categoryName"
-                name="categoryName"
-                value={formData.categoryName}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
                 className={styles.modalInput}
                 autoFocus

@@ -1,19 +1,10 @@
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
-import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
+import { ApplicationData } from "../../interfaces/AplicationData.interface";
+import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./AplicationsManagerPage.module.css";
 
 const ApplicationsManagerPage = () => {
-  interface ApplicationData extends BaseDataRow {
-    id: number;
-    name: string;
-    publsher: string;
-    developer: string;
-    isDownloadable: boolean;
-    isShown: boolean;
-    downloads: number;
-  }
-
   const applicationColumns: TableColumn<ApplicationData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 10, sortable: true },
     {

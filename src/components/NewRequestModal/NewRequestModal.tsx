@@ -1,36 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from "./NewRequestModal.module.css";
 import InputField from "../InputField/InputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import authService from "../../services/AuthService";
 import { RequestType } from "../../enum/RequestType.enum";
-
-interface RequestData {
-  id: number | null;
-  user: number | undefined;
-  requestDate?: string;
-  requestStatus?: string;
-  adminComments?: string;
-  requestTitle?: string;
-  requestBody?: string;
-}
-
-interface FullRequestData extends RequestData {
-  id: number | null;
-  user: number | undefined;
-  requestDate?: string;
-  requestStatus?: string;
-  adminComments?: string;
-  appTitle: string;
-  appDescription: string;
-  publishApp: boolean;
-  downloadableNow: boolean;
-  appZipFile: File;
-  appIconFile: File;
-  appImageFile: File;
-  selectedCategories: string[];
-  selectedDeveloperId: number;
-}
+import { CategoryData } from "../../interfaces/Category.interface";
+import { FullRequestData } from "../../interfaces/RequestData.interface";
 
 const NewRequestModal = ({
   requestToManage,
@@ -38,7 +13,7 @@ const NewRequestModal = ({
   handleClose,
   requestType,
 }: {
-  requestToManage: RequestData;
+  requestToManage: FullRequestData;
   isEditing: boolean;
   handleClose: () => void;
   requestType?: RequestType;
@@ -55,13 +30,14 @@ const NewRequestModal = ({
     appImageFile: new File([], ""),
     selectedCategories: [],
     selectedDeveloperId: 0,
+    requestType: RequestType.AppUpload,
   };
 
-  const MOCK_CATEGORIES = [
-    { id: 1, name: "FPS", type: "game" },
-    { id: 2, name: "TPS", type: "game" },
-    { id: 3, name: "RPG", type: "game" },
-    { id: 4, name: "Emulacion", type: "app" },
+  const MOCK_CATEGORIES: CategoryData[] = [
+    { id: 1, name: "FPS", categoryType: "game" },
+    { id: 2, name: "TPS", categoryType: "game" },
+    { id: 3, name: "RPG", categoryType: "game" },
+    { id: 4, name: "Emulacion", categoryType: "app" },
   ];
 
   const MOCK_DEVELOPERS = [
@@ -73,6 +49,12 @@ const NewRequestModal = ({
   const [actualRequest, setActualRequest] = useState<FullRequestData>(cleanRequest);
   const [mockCategories, setMockCategories] = useState(MOCK_CATEGORIES);
   const [mockDevelopers, setMockDevelopers] = useState(MOCK_DEVELOPERS);
+
+  useEffect(() => {
+    if (requestToManage.id) {
+      setActualRequest(requestToManage);
+    }
+  }, [requestToManage]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -87,9 +69,15 @@ const NewRequestModal = ({
 
     if (name === "selectedCategories" && target instanceof HTMLSelectElement) {
       const selectedOptions = Array.from(target.selectedOptions).map((option) => option.value);
+
+      const mappedRolesOrUndefined = selectedOptions.map((optionName) =>
+        mockCategories.find((c) => c.name === optionName)
+      );
+
+      const selectedRoles = mappedRolesOrUndefined.filter((role) => role !== undefined);
       setActualRequest((prev) => ({
         ...prev,
-        selectedCategories: selectedOptions,
+        selectedCategories: selectedRoles,
       }));
       return;
     }
@@ -190,13 +178,13 @@ const NewRequestModal = ({
           id="selectedCategories"
           name="selectedCategories"
           multiple
-          value={actualRequest.selectedCategories}
+          value={actualRequest.selectedCategories?.map((category) => category.name)}
           onChange={handleInputChange}
           className={styles.selectMultiple}
           required
         >
           {mockCategories.map((category) => (
-            <option key={category.id} value={category.id}>
+            <option key={category.id} value={category.name}>
               {category.name}
             </option>
           ))}
@@ -205,10 +193,7 @@ const NewRequestModal = ({
           <p className={styles.feedbackText}>
             Seleccionadas:{" "}
             {actualRequest.selectedCategories
-              .map(
-                (catId) =>
-                  mockCategories.find((c) => c.id === Number.parseInt(catId))?.name || catId
-              )
+              .map((cat) => mockCategories.find((c) => c.id === cat.id)?.name || cat)
               .join(", ")}
           </p>
         )}

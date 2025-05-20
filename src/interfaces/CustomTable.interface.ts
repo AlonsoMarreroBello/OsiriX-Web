@@ -1,12 +1,9 @@
-export interface BaseDataRow {
-  id: string | number;
-  [key: string]: string | number | boolean | null | undefined | Role[];
-}
+import { Role } from "../services/AuthService";
+import { CategoryData } from "./Category.interface";
 
-interface Role {
-  id: number;
-  name: string;
-  description: string;
+export interface BaseDataRow {
+  id: string | number | null;
+  [key: string]: string | number | boolean | null | undefined | Role[] | File | CategoryData[];
 }
 
 export interface DataColumnDefinition<T extends BaseDataRow> {

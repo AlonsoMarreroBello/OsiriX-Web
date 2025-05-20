@@ -1,35 +1,27 @@
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
-import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
+import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./RequestManagerPage.module.css";
 import NewRequestModal from "../../components/NewRequestModal/NewRequestModal";
 import { useState } from "react";
 import { RequestType } from "../../enum/RequestType.enum";
+import { FullRequestData } from "../../interfaces/RequestData.interface";
 
 const RequestManagerPage = () => {
-  const defaultRequest: RequestData = {
+  const defaultRequest: FullRequestData = {
     id: 0,
     user: 0,
     requestTitle: "",
     requestBody: "",
+    requestType: RequestType.Standard,
   };
 
   const [isOpenNewRequestModal, setIsOpenNewRequestModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [requestToManage, setRequestToManage] = useState<RequestData>(defaultRequest);
+  const [requestToManage, setRequestToManage] = useState<FullRequestData>(defaultRequest);
   const [requestType, setRequestType] = useState<RequestType>(RequestType.Standard);
 
-  interface RequestData extends BaseDataRow {
-    id: number;
-    user: number;
-    requestDate?: string;
-    requestStatus?: string;
-    adminComments?: string;
-    requestTitle: string;
-    requestBody: string;
-  }
-
-  const userColumns: TableColumn<RequestData>[] = [
+  const userColumns: TableColumn<FullRequestData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 10, sortable: true },
     {
       type: "data",
@@ -37,7 +29,11 @@ const RequestManagerPage = () => {
       headerName: "Solicitud",
       width: "auto",
       sortable: false,
+      renderCell(_value, row) {
+        return row.requestType === RequestType.AppUpload ? row.appTitle : row.requestTitle;
+      },
     },
+    { type: "data", field: "requestType", headerName: "Tipo", width: 130, sortable: false },
     { type: "data", field: "user", headerName: "Usuario", width: 130, sortable: true },
     { type: "data", field: "requestStatus", headerName: "Estado", width: 80, sortable: true },
     { type: "data", field: "requestDate", headerName: "Fecha", width: 80, sortable: true },
@@ -53,7 +49,8 @@ const RequestManagerPage = () => {
             onClick={(e) => {
               e.stopPropagation();
               console.log(" Ver ", row);
-              activateNewRequestModal(row.id);
+              activateNewRequestModal(row.id!);
+              setRequestType(row.requestType);
               if (row.requestStatus === "Aceptada") {
                 setIsOpenNewRequestModal(false);
               }
@@ -66,7 +63,7 @@ const RequestManagerPage = () => {
     },
   ];
 
-  const userData: RequestData[] = [
+  const userData: FullRequestData[] = [
     {
       id: 1,
       user: 1,
@@ -74,14 +71,30 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 1",
       requestStatus: "Pendiente",
       requestDate: "2023-01-01",
+      requestType: RequestType.Standard,
     },
     {
       id: 2,
       user: 1,
-      requestTitle: "Solicitud 2",
-      requestBody: "Solicitud 2",
+      requestTitle: "Solicitud 2.1",
+      appTitle: "Solicitud 2",
+      appDescription: "Solicitud 2",
+      publishApp: false,
+      downloadableNow: true,
+      appZipFile: new File([], ""),
+      appIconFile: new File([], ""),
+      appImageFile: new File([], ""),
+      selectedCategories: [
+        {
+          id: 1,
+          name: "FPS",
+          categoryType: "game",
+        },
+      ],
+      selectedDeveloperId: 1,
       requestStatus: "Pendiente",
       requestDate: "2023-01-02",
+      requestType: RequestType.AppUpload,
     },
     {
       id: 3,
@@ -90,6 +103,7 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 3",
       requestStatus: "Aceptada",
       requestDate: "2023-01-03",
+      requestType: RequestType.Standard,
     },
     {
       id: 4,
@@ -98,6 +112,7 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 4",
       requestStatus: "Aceptada",
       requestDate: "2023-01-04",
+      requestType: RequestType.Standard,
     },
     {
       id: 5,
@@ -106,6 +121,7 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 5",
       requestStatus: "Aceptada",
       requestDate: "2023-01-05",
+      requestType: RequestType.Standard,
     },
     {
       id: 6,
@@ -114,6 +130,7 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 6",
       requestStatus: "Aceptada",
       requestDate: "2023-01-06",
+      requestType: RequestType.Standard,
     },
     {
       id: 7,
@@ -122,6 +139,7 @@ const RequestManagerPage = () => {
       requestBody: "Solicitud 7",
       requestStatus: "Aceptada",
       requestDate: "2023-01-07",
+      requestType: RequestType.Standard,
     },
   ];
 
@@ -135,6 +153,7 @@ const RequestManagerPage = () => {
       const request = userData.find((request) => request.id === id);
       if (request) {
         setIsEditing(true);
+        setRequestType(request.requestType ? request.requestType : RequestType.Standard);
         if (request.appId) {
           setRequestType(RequestType.AppUpload);
         } else {
@@ -151,6 +170,7 @@ const RequestManagerPage = () => {
     setIsOpenNewRequestModal(false);
     setIsEditing(false);
     setRequestToManage(defaultRequest);
+    setRequestType(RequestType.Standard);
   };
 
   const handleRequestTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

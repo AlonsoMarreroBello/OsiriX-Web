@@ -4,18 +4,13 @@ import CustomTable from "../../components/CustomTable/CustomTable";
 import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
 import InputField from "../../components/InputField/InputField";
 import styles from "./UserManagerPage.module.css";
-
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Role } from "../../services/AuthService";
 
 interface UserData extends BaseDataRow {
   id: number;
   user: string;
   email: string;
-  userType: UserRoleType;
+  userType: UserType;
   userStatus: string;
   publisherName?: string;
   nif?: string;
@@ -24,14 +19,18 @@ interface UserData extends BaseDataRow {
   roles?: Role[];
 }
 
-type UserRoleType = "user" | "publisher" | "staff";
+enum UserType {
+  "user",
+  "publisher",
+  "staff",
+}
 
 interface NewUserForm {
   username: string;
   email: string;
   password?: string;
   enabled: boolean;
-  type: UserRoleType;
+  type: UserType;
   publisherName?: string;
   nif?: string;
   address?: string;
@@ -44,7 +43,7 @@ const initialNewUserState: NewUserForm = {
   email: "",
   password: "",
   enabled: true,
-  type: "user",
+  type: UserType.user,
   publisherName: "",
   nif: "",
   address: "",
@@ -55,12 +54,10 @@ const initialNewUserState: NewUserForm = {
 interface StaffMember {
   id: number;
   username: string;
+  email: string;
+  type: UserType;
+  role: Role[];
 }
-const mockStaffList: StaffMember[] = [
-  { id: 101, username: "StaffManagerAna" },
-  { id: 102, username: "StaffSupportJuan" },
-  { id: 103, username: "StaffTechPedro" },
-];
 
 const mockRoleOptions: Role[] = [
   { id: 1, name: "Admin", description: "Full access to all system features." },
@@ -68,6 +65,30 @@ const mockRoleOptions: Role[] = [
   { id: 3, name: "Support", description: "Assists users with issues." },
   { id: 4, name: "Content Reviewer", description: "Reviews and approves content." },
   { id: 5, name: "Account Manager", description: "Manages publisher accounts." },
+];
+
+const mockStaffList: StaffMember[] = [
+  {
+    id: 101,
+    username: "StaffManagerAna",
+    email: "ana@gmail.com",
+    type: UserType.staff,
+    role: [mockRoleOptions[0]],
+  },
+  {
+    id: 102,
+    username: "StaffSupportJuan",
+    email: "juan@gmail.com",
+    type: UserType.staff,
+    role: [mockRoleOptions[1]],
+  },
+  {
+    id: 103,
+    username: "StaffTechPedro",
+    email: "pedro@gmail.com",
+    type: UserType.staff,
+    role: [mockRoleOptions[2]],
+  },
 ];
 
 const UserManagerPage = () => {
@@ -80,14 +101,14 @@ const UserManagerPage = () => {
       id: 1,
       user: "AlonsoSimpleUser",
       email: "alonso.user@correo.com",
-      userType: "user",
+      userType: UserType.user,
       userStatus: "Enabled",
     },
     {
       id: 2,
       user: "EditorialSol",
       email: "contacto@editorialsol.com",
-      userType: "publisher",
+      userType: UserType.publisher,
       userStatus: "Enabled",
       publisherName: "Editorial Sol S.L.",
       nif: "B12345678",
@@ -98,7 +119,7 @@ const UserManagerPage = () => {
       id: 3,
       user: "StaffManagerAna",
       email: "ana.manager@correo.com",
-      userType: "staff",
+      userType: UserType.staff,
       userStatus: "Enabled",
       roles: [
         mockRoleOptions.find((r) => r.id === 5) as Role,
@@ -173,7 +194,7 @@ const UserManagerPage = () => {
       address: userToEdit.address || "",
       assignedStaffId: staffMember ? staffMember.id : "",
       roleIds:
-        userToEdit.userType === "staff" && userToEdit.roles
+        userToEdit.userType === UserType.staff && userToEdit.roles
           ? userToEdit.roles.map((role) => role.id)
           : [],
     });
@@ -189,7 +210,7 @@ const UserManagerPage = () => {
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target;
     const name = target.name || target.id;
-    let value: string | boolean | number | number[] | "";
+    let value: string | boolean | number | number[] | "" | UserType;
 
     if (target.type === "checkbox") {
       value = (target as HTMLInputElement).checked;
@@ -209,14 +230,14 @@ const UserManagerPage = () => {
     setNewUserForm((prev) => {
       const updatedForm = { ...prev, [name]: value };
       if (name === "type" && !editingUser) {
-        const newType = value as UserRoleType;
-        if (newType !== "publisher") {
+        const newType = value as UserType | "";
+        if (newType !== UserType.publisher) {
           updatedForm.publisherName = "";
           updatedForm.nif = "";
           updatedForm.address = "";
           updatedForm.assignedStaffId = "";
         }
-        if (newType !== "staff") {
+        if (newType !== UserType.staff) {
           updatedForm.roleIds = [];
         }
       }
@@ -237,16 +258,16 @@ const UserManagerPage = () => {
               email: newUserForm.email,
               userStatus: newUserForm.enabled ? "Enabled" : "Disabled",
               publisherName:
-                newUserForm.type === "publisher" ? newUserForm.publisherName : undefined,
-              nif: newUserForm.type === "publisher" ? newUserForm.nif : undefined,
-              address: newUserForm.type === "publisher" ? newUserForm.address : undefined,
+                newUserForm.type === UserType.publisher ? newUserForm.publisherName : undefined,
+              nif: newUserForm.type === UserType.publisher ? newUserForm.nif : undefined,
+              address: newUserForm.type === UserType.publisher ? newUserForm.address : undefined,
               assignedStaff:
-                newUserForm.type === "publisher" && newUserForm.assignedStaffId
+                newUserForm.type === UserType.publisher && newUserForm.assignedStaffId
                   ? mockStaffList.find((s) => s.id === Number(newUserForm.assignedStaffId))
                       ?.username
                   : undefined,
               roles:
-                newUserForm.type === "staff" && newUserForm.roleIds
+                newUserForm.type === UserType.staff && newUserForm.roleIds
                   ? (newUserForm.roleIds
                       .map((id) => mockRoleOptions.find((r) => r.id === id))
                       .filter((role) => role !== undefined) as Role[])
@@ -267,7 +288,7 @@ const UserManagerPage = () => {
         userStatus: newUserForm.enabled ? "Enabled" : "Disabled",
       };
 
-      if (newUserForm.type === "publisher") {
+      if (newUserForm.type === UserType.publisher) {
         userToAdd.publisherName = newUserForm.publisherName;
         userToAdd.nif = newUserForm.nif;
         userToAdd.address = newUserForm.address;
@@ -275,7 +296,11 @@ const UserManagerPage = () => {
         userToAdd.assignedStaff = staff ? staff.username : undefined;
       }
 
-      if (newUserForm.type === "staff" && newUserForm.roleIds && newUserForm.roleIds.length > 0) {
+      if (
+        newUserForm.type === UserType.staff &&
+        newUserForm.roleIds &&
+        newUserForm.roleIds.length > 0
+      ) {
         userToAdd.roles = newUserForm.roleIds
           .map((selectedId) => mockRoleOptions.find((role) => role.id === selectedId))
           .filter((role) => role !== undefined) as Role[];
@@ -286,9 +311,9 @@ const UserManagerPage = () => {
   };
 
   const userTypeOptions: { value: NewUserForm["type"]; label: string }[] = [
-    { value: "user", label: "User" },
-    { value: "publisher", label: "Publisher" },
-    { value: "staff", label: "Staff" },
+    { value: UserType.user, label: "User" },
+    { value: UserType.publisher, label: "Publisher" },
+    { value: UserType.staff, label: "Staff" },
   ];
 
   return (
@@ -370,7 +395,7 @@ const UserManagerPage = () => {
                 </select>
               </div>
 
-              {newUserForm.type === "publisher" && (
+              {newUserForm.type === UserType.publisher && (
                 <>
                   <InputField
                     id="publisherName"
@@ -418,7 +443,7 @@ const UserManagerPage = () => {
                 </>
               )}
 
-              {newUserForm.type === "staff" && (
+              {newUserForm.type === UserType.staff && (
                 <div className={styles.formField}>
                   <label htmlFor="roleIds" className={styles.formLabel}>
                     Roles <span className={styles.requiredIndicator}>*</span>
