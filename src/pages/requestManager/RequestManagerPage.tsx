@@ -4,23 +4,29 @@ import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface
 import styles from "./RequestManagerPage.module.css";
 import NewRequestModal from "../../components/NewRequestModal/NewRequestModal";
 import { useState } from "react";
+import { RequestType } from "../../enum/RequestType.enum";
 
 const RequestManagerPage = () => {
-  const [isOpenNewRequestModal, setIsOpenNewRequestModal] = useState(false);
-  const [requestToManage, setRequestToManage] = useState<RequestData>({
+  const defaultRequest: RequestData = {
     id: 0,
-    user: "",
+    user: 0,
     requestTitle: "",
-    requestStatus: "",
-    requestDate: "",
-  });
+    requestBody: "",
+  };
+
+  const [isOpenNewRequestModal, setIsOpenNewRequestModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [requestToManage, setRequestToManage] = useState<RequestData>(defaultRequest);
+  const [requestType, setRequestType] = useState<RequestType>(RequestType.Standard);
 
   interface RequestData extends BaseDataRow {
     id: number;
-    user: string;
+    user: number;
+    requestDate?: string;
+    requestStatus?: string;
+    adminComments?: string;
     requestTitle: string;
-    requestStatus: string;
-    requestDate: string;
+    requestBody: string;
   }
 
   const userColumns: TableColumn<RequestData>[] = [
@@ -63,50 +69,57 @@ const RequestManagerPage = () => {
   const userData: RequestData[] = [
     {
       id: 1,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 1",
+      requestBody: "Solicitud 1",
       requestStatus: "Pendiente",
       requestDate: "2023-01-01",
     },
     {
       id: 2,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 2",
+      requestBody: "Solicitud 2",
       requestStatus: "Pendiente",
       requestDate: "2023-01-02",
     },
     {
       id: 3,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 3",
+      requestBody: "Solicitud 3",
       requestStatus: "Aceptada",
       requestDate: "2023-01-03",
     },
     {
       id: 4,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 4",
+      requestBody: "Solicitud 4",
       requestStatus: "Aceptada",
       requestDate: "2023-01-04",
     },
     {
       id: 5,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 5",
+      requestBody: "Solicitud 5",
       requestStatus: "Aceptada",
       requestDate: "2023-01-05",
     },
     {
       id: 6,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 6",
+      requestBody: "Solicitud 6",
       requestStatus: "Aceptada",
       requestDate: "2023-01-06",
     },
     {
       id: 7,
-      user: "Alonso",
+      user: 1,
       requestTitle: "Solicitud 7",
+      requestBody: "Solicitud 7",
       requestStatus: "Aceptada",
       requestDate: "2023-01-07",
     },
@@ -121,9 +134,27 @@ const RequestManagerPage = () => {
     if (id) {
       const request = userData.find((request) => request.id === id);
       if (request) {
+        setIsEditing(true);
+        if (request.appId) {
+          setRequestType(RequestType.AppUpload);
+        } else {
+          setRequestType(RequestType.Standard);
+        }
         setRequestToManage(request);
       }
+    } else {
+      setIsEditing(false);
     }
+  };
+
+  const deactivateNewRequestModal = () => {
+    setIsOpenNewRequestModal(false);
+    setIsEditing(false);
+    setRequestToManage(defaultRequest);
+  };
+
+  const handleRequestTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRequestType(e.target.value as RequestType);
   };
 
   return (
@@ -133,14 +164,33 @@ const RequestManagerPage = () => {
         <main className={styles.main}>
           <div className={styles.titleContainer}>
             <h2 className={styles.title}>Solicitudes</h2>
-            <button onClick={() => activateNewRequestModal()} className={styles.newRequestButton}>
-              Nueva solicitud
-            </button>
+            <div className={styles.actionsHeader}>
+              <div className={styles.selectWrapper}>
+                <select
+                  className={styles.select}
+                  value={requestType}
+                  onChange={handleRequestTypeChange}
+                >
+                  <option value={RequestType.Standard}>Solicitud estándar</option>
+                  <option value={RequestType.AppUpload}>Solicitud de carga de aplicación</option>
+                </select>
+              </div>
+              <button onClick={() => activateNewRequestModal()} className={styles.newRequestButton}>
+                Nueva solicitud
+              </button>
+            </div>
           </div>
           <div className={styles.tableCard}>
             <CustomTable columns={userColumns} data={userData} onRowClick={handleGlobalRowClick} />
           </div>
-          {isOpenNewRequestModal && <NewRequestModal requestToManage={requestToManage} />}
+          {isOpenNewRequestModal && (
+            <NewRequestModal
+              requestType={requestType}
+              requestToManage={requestToManage}
+              isEditing={isEditing}
+              handleClose={deactivateNewRequestModal}
+            />
+          )}
         </main>
       </div>
     </>

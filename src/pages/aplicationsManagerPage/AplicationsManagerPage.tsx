@@ -52,15 +52,6 @@ const ApplicationsManagerPage = () => {
               console.log(" Edit ", row);
             }}
           >
-            Editar
-          </button>
-          <button
-            className={styles.actionButtonEdit}
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log(" Edit ", row);
-            }}
-          >
             {row.isShown ? "Ocultar" : "Mostrar"}
           </button>
           <button

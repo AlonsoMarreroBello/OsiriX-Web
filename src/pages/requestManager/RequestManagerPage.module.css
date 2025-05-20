@@ -26,7 +26,6 @@
   height: fit-content;
   margin-right: 1rem;
   position: relative;
-  top: 1rem;
 
   &:hover {
     background-color: var(--color-accent-pastel-shadow-hover);
@@ -80,4 +79,53 @@
   background-color: var(--color-bg-tertiary);
   color: var(--color-text-tertiary);
   cursor: not-allowed;
+}
+
+.actionsHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+
+.newRequestButton:hover {
+  background-color: var(--color-accent-pastel-shadow-hover);
+  color: var(--color-accent-pastel-main-hover);
+  border-color: var(--color-accent-pastel-main);
+  transform: translateY(-1px);
+}
+
+
+.selectWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: var(--color-accent-pastel-shadow);
+  color: var(--color-accent-pastel-main);
+  border: 1px solid var(--color-accent-pastel-border);
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-width: 200px;
+  height: fit-content;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.select:hover {
+  border-color: var(--color-accent-pastel-main);
+  background-color: var(--color-bg-tertiary);
+}
+
+.select:focus {
+  border-color: var(--color-accent-pastel-main);
+  box-shadow: 0 0 0 2px var(--color-accent-pastel-shadow-hover);
 }

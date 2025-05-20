@@ -1,6 +1,12 @@
 export interface BaseDataRow {
   id: string | number;
-  [key: string]: string | number | boolean | null | undefined;
+  [key: string]: string | number | boolean | null | undefined | Role[];
+}
+
+interface Role {
+  id: number;
+  name: string;
+  description: string;
 }
 
 export interface DataColumnDefinition<T extends BaseDataRow> {
