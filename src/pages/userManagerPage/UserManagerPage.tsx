@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
 import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
 import InputField from "../../components/InputField/InputField";
 import styles from "./UserManagerPage.module.css";
 import { Role } from "../../services/AuthService";
+import userService from "../../services/UserService";
 
 interface UserData extends BaseDataRow {
   id: number;
-  user: string;
+  username: string;
   email: string;
   userType: UserType;
-  userStatus: string;
+  isEnabled: boolean;
+  accountNotLocked: boolean;
+  registerDate: string;
+  lastLogin: string;
   publisherName?: string;
   nif?: string;
   address?: string;
@@ -96,41 +100,11 @@ const UserManagerPage = () => {
   const [newUserForm, setNewUserForm] = useState<NewUserForm>(initialNewUserState);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
 
-  const [userData, setUserData] = useState<UserData[]>([
-    {
-      id: 1,
-      user: "AlonsoSimpleUser",
-      email: "alonso.user@correo.com",
-      userType: UserType.user,
-      userStatus: "Enabled",
-    },
-    {
-      id: 2,
-      user: "EditorialSol",
-      email: "contacto@editorialsol.com",
-      userType: UserType.publisher,
-      userStatus: "Enabled",
-      publisherName: "Editorial Sol S.L.",
-      nif: "B12345678",
-      address: "Calle Falsa 123, Ciudad",
-      assignedStaff: "StaffManagerAna",
-    },
-    {
-      id: 3,
-      user: "StaffManagerAna",
-      email: "ana.manager@correo.com",
-      userType: UserType.staff,
-      userStatus: "Enabled",
-      roles: [
-        mockRoleOptions.find((r) => r.id === 5) as Role,
-        mockRoleOptions.find((r) => r.id === 4) as Role,
-      ],
-    },
-  ]);
+  const [userData, setUserData] = useState<UserData[]>([]);
 
   const userColumns: TableColumn<UserData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 50, sortable: true },
-    { type: "data", field: "user", headerName: "Usuario/Nombre", width: 180, sortable: true },
+    { type: "data", field: "username", headerName: "Usuario/Nombre", width: 180, sortable: true },
     { type: "data", field: "email", headerName: "Correo", width: "auto", sortable: false },
     {
       type: "data",
@@ -138,8 +112,11 @@ const UserManagerPage = () => {
       headerName: "Tipo",
       width: 100,
       sortable: true,
+      renderCell(_value, row) {
+        return row.userType === null ? "USER" : row.userType;
+      },
     },
-    { type: "data", field: "userStatus", headerName: "Estado", width: 100, sortable: true },
+    { type: "data", field: "isEnabled", headerName: "Habilitado", width: 100, sortable: true },
     {
       type: "actions",
       headerName: "Acciones",
@@ -169,6 +146,38 @@ const UserManagerPage = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        setUserData([]);
+        // Ejecuta todas las promesas en paralelo
+        const [normalUsersResult, publishersResult, staffResult] = await Promise.all([
+          userService.getAllNormalUsers(),
+          userService.getAllPublishers(),
+          userService.getAllStaffs(),
+        ]);
+
+        let combinedData: UserData[] = [];
+        if (normalUsersResult) {
+          combinedData = [...combinedData, ...normalUsersResult];
+        }
+        if (publishersResult) {
+          combinedData = [...combinedData, ...publishersResult];
+        }
+        if (staffResult) {
+          combinedData = [...combinedData, ...staffResult];
+        }
+
+        setUserData(combinedData);
+      } catch (err) {
+        console.error("Error al obtener todos los usuarios:", err);
+        setUserData([]);
+      }
+    };
+
+    fetchAllUsers();
+  }, []);
+
   const handleGlobalRowClick = (id: string | number) => {
     console.log("Clic en fila (global), ID:", id);
   };
@@ -184,7 +193,7 @@ const UserManagerPage = () => {
     const staffMember = mockStaffList.find((s) => s.username === userToEdit.assignedStaff);
 
     setNewUserForm({
-      username: userToEdit.user,
+      username: userToEdit.username,
       email: userToEdit.email,
       password: "",
       enabled: userToEdit.userStatus === "Enabled",
@@ -210,10 +219,10 @@ const UserManagerPage = () => {
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target;
     const name = target.name || target.id;
-    let value: string | boolean | number | number[] | "" | UserType;
+    let processedValue: string | boolean | number | number[] | "" | UserType; // Renombrado para claridad
 
     if (target.type === "checkbox") {
-      value = (target as HTMLInputElement).checked;
+      processedValue = (target as HTMLInputElement).checked;
     } else if (target.type === "select-multiple") {
       const options = (target as HTMLSelectElement).options;
       const selectedValues: number[] = [];
@@ -222,15 +231,21 @@ const UserManagerPage = () => {
           selectedValues.push(Number(options[i].value));
         }
       }
-      value = selectedValues;
+      processedValue = selectedValues;
     } else {
-      value = target.value;
+      processedValue = target.value; // Sigue siendo string aquí
+      // ****** AQUÍ LA CORRECCIÓN IMPORTANTE ******
+      if (name === "type") {
+        processedValue = Number(target.value) as UserType; // Convertir a número
+      }
     }
 
     setNewUserForm((prev) => {
-      const updatedForm = { ...prev, [name]: value };
+      const updatedForm = { ...prev, [name]: processedValue }; // processedValue ya es del tipo correcto
+
+      // La lógica de reseteo ahora funcionará correctamente porque newType será numérico
       if (name === "type" && !editingUser) {
-        const newType = value as UserType | "";
+        const newType = processedValue as UserType; // Ya es UserType (un número)
         if (newType !== UserType.publisher) {
           updatedForm.publisherName = "";
           updatedForm.nif = "";
@@ -282,10 +297,13 @@ const UserManagerPage = () => {
       const newId = userData.length > 0 ? Math.max(...userData.map((u) => u.id)) + 1 : 1;
       const userToAdd: UserData = {
         id: newId,
-        user: newUserForm.username,
+        username: newUserForm.username,
         email: newUserForm.email,
         userType: newUserForm.type,
-        userStatus: newUserForm.enabled ? "Enabled" : "Disabled",
+        isEnabled: true,
+        accountNotLocked: true,
+        lastLogin: "2022-01-01T00:00:00.000Z",
+        registerDate: "2022-01-01T00:00:00.000Z",
       };
 
       if (newUserForm.type === UserType.publisher) {
