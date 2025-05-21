@@ -14,8 +14,8 @@ export interface AuthLoginResponseDto {
 
 export interface Role {
   id: number;
-  name: string;
-  description: string;
+  roleName: string;
+  roleDescription: string;
 }
 
 export interface DecodedToken {

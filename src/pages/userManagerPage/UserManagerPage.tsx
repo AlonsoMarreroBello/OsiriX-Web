@@ -1,105 +1,32 @@
 import React, { useEffect, useState } from "react";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
-import { BaseDataRow, TableColumn } from "../../interfaces/CustomTable.interface";
+import { TableColumn } from "../../interfaces/CustomTable.interface";
 import InputField from "../../components/InputField/InputField";
 import styles from "./UserManagerPage.module.css";
 import { Role } from "../../services/AuthService";
 import userService from "../../services/UserService";
-
-interface UserData extends BaseDataRow {
-  id: number;
-  username: string;
-  email: string;
-  userType: UserType;
-  isEnabled: boolean;
-  accountNotLocked: boolean;
-  registerDate: string;
-  lastLogin: string;
-  publisherName?: string;
-  nif?: string;
-  address?: string;
-  assignedStaff?: string;
-  roles?: Role[];
-}
-
-enum UserType {
-  "user",
-  "publisher",
-  "staff",
-}
-
-interface NewUserForm {
-  username: string;
-  email: string;
-  password?: string;
-  enabled: boolean;
-  type: UserType;
-  publisherName?: string;
-  nif?: string;
-  address?: string;
-  assignedStaffId?: number | "";
-  roleIds?: number[];
-}
+import { NewUserForm, UserData, UserType } from "../../interfaces/UserData.interface";
 
 const initialNewUserState: NewUserForm = {
   username: "",
   email: "",
   password: "",
-  enabled: true,
-  type: UserType.user,
+  isEnabled: true,
+  userType: UserType.user,
   publisherName: "",
   nif: "",
   address: "",
-  assignedStaffId: "",
+  assignedStaffId: 0,
   roleIds: [],
 };
-
-interface StaffMember {
-  id: number;
-  username: string;
-  email: string;
-  type: UserType;
-  role: Role[];
-}
-
-const mockRoleOptions: Role[] = [
-  { id: 1, name: "Admin", description: "Full access to all system features." },
-  { id: 2, name: "Editor", description: "Can create and manage content." },
-  { id: 3, name: "Support", description: "Assists users with issues." },
-  { id: 4, name: "Content Reviewer", description: "Reviews and approves content." },
-  { id: 5, name: "Account Manager", description: "Manages publisher accounts." },
-];
-
-const mockStaffList: StaffMember[] = [
-  {
-    id: 101,
-    username: "StaffManagerAna",
-    email: "ana@gmail.com",
-    type: UserType.staff,
-    role: [mockRoleOptions[0]],
-  },
-  {
-    id: 102,
-    username: "StaffSupportJuan",
-    email: "juan@gmail.com",
-    type: UserType.staff,
-    role: [mockRoleOptions[1]],
-  },
-  {
-    id: 103,
-    username: "StaffTechPedro",
-    email: "pedro@gmail.com",
-    type: UserType.staff,
-    role: [mockRoleOptions[2]],
-  },
-];
 
 const UserManagerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUserForm, setNewUserForm] = useState<NewUserForm>(initialNewUserState);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
-
+  const [staffList, setStaffList] = useState<UserData[]>([]);
+  const [roleOptions, setRoleOptions] = useState<Role[]>([]);
   const [userData, setUserData] = useState<UserData[]>([]);
 
   const userColumns: TableColumn<UserData>[] = [
@@ -127,6 +54,7 @@ const UserManagerPage = () => {
             className={`${styles.actionButton} ${styles.actionButtonEdit}`}
             onClick={(e) => {
               e.stopPropagation();
+              console.log(row);
               handleEditUser(row);
             }}
           >
@@ -136,45 +64,51 @@ const UserManagerPage = () => {
             className={`${styles.actionButton} ${styles.actionButtonDelete}`}
             onClick={(e) => {
               e.stopPropagation();
-              console.log(" Delete/Deactivate ", row);
+              userService.togleUserEnabled(row.id).then(() => {
+                fetchAllUsers();
+              });
             }}
           >
-            Desactivar
+            {row.isEnabled ? "Desactivar" : "Activar"}
           </button>
         </div>
       ),
     },
   ];
 
-  useEffect(() => {
-    const fetchAllUsers = async () => {
-      try {
-        setUserData([]);
-        // Ejecuta todas las promesas en paralelo
-        const [normalUsersResult, publishersResult, staffResult] = await Promise.all([
-          userService.getAllNormalUsers(),
-          userService.getAllPublishers(),
-          userService.getAllStaffs(),
-        ]);
+  const fetchAllUsers = async () => {
+    try {
+      setUserData([]);
+      const [normalUsersResult, publishersResult, staffResult, rolesResult] = await Promise.all([
+        userService.getAllNormalUsers(),
+        userService.getAllPublishers(),
+        userService.getAllStaffs(),
+        userService.getStaffRoles(),
+      ]);
 
-        let combinedData: UserData[] = [];
-        if (normalUsersResult) {
-          combinedData = [...combinedData, ...normalUsersResult];
-        }
-        if (publishersResult) {
-          combinedData = [...combinedData, ...publishersResult];
-        }
-        if (staffResult) {
-          combinedData = [...combinedData, ...staffResult];
-        }
-
-        setUserData(combinedData);
-      } catch (err) {
-        console.error("Error al obtener todos los usuarios:", err);
-        setUserData([]);
+      let combinedData: UserData[] = [];
+      if (normalUsersResult) {
+        combinedData = [...combinedData, ...normalUsersResult];
       }
-    };
+      if (publishersResult) {
+        combinedData = [...combinedData, ...publishersResult];
+      }
+      if (staffResult) {
+        combinedData = [...combinedData, ...staffResult];
+        setStaffList(staffResult);
+      }
+      if (rolesResult) {
+        setRoleOptions(rolesResult);
+      }
 
+      setUserData(combinedData.sort((a, b) => a.id - b.id));
+    } catch (err) {
+      console.error("Error al obtener todos los usuarios:", err);
+      setUserData([]);
+    }
+  };
+
+  useEffect(() => {
     fetchAllUsers();
   }, []);
 
@@ -190,18 +124,52 @@ const UserManagerPage = () => {
 
   const handleEditUser = (userToEdit: UserData) => {
     setEditingUser(userToEdit);
-    const staffMember = mockStaffList.find((s) => s.username === userToEdit.assignedStaff);
+    const staffMember = staffList.find((s) => s.username === userToEdit.assignedStaff);
+
+    let formUserType: UserType = UserType.user;
+
+    if (userToEdit.userType != null) {
+      const incomingUserType = userToEdit.userType;
+
+      if (typeof incomingUserType === "string") {
+        const typeKey = (incomingUserType as string).toLowerCase() as keyof typeof UserType;
+        if (UserType[typeKey] !== undefined && typeof UserType[typeKey] === "number") {
+          formUserType = UserType[typeKey];
+        } else {
+          console.warn(`Tipo de usuario (string) desconocido desde datos: ${incomingUserType}`);
+          const numericValue = parseInt(incomingUserType, 10);
+          if (!isNaN(numericValue) && UserType[numericValue] !== undefined) {
+            formUserType = numericValue as UserType;
+          }
+        }
+      } else if (typeof incomingUserType === "number") {
+        const numericEnumValues = Object.values(UserType).filter(
+          (value) => typeof value === "number"
+        ) as UserType[];
+
+        if (numericEnumValues.includes(incomingUserType as UserType)) {
+          formUserType = incomingUserType as UserType;
+        } else {
+          console.warn(
+            `Valor numérico de tipo de usuario inválido desde datos: ${incomingUserType}`
+          );
+        }
+      } else {
+        console.warn(`Tipo de dato no esperado para userType: ${typeof incomingUserType}`);
+      }
+    }
 
     setNewUserForm({
+      id: userToEdit.id,
       username: userToEdit.username,
       email: userToEdit.email,
       password: "",
-      enabled: userToEdit.userStatus === "Enabled",
-      type: userToEdit.userType,
+      isEnabled: userToEdit.isEnabled,
+      userType: formUserType,
       publisherName: userToEdit.publisherName || "",
       nif: userToEdit.nif || "",
       address: userToEdit.address || "",
-      assignedStaffId: staffMember ? staffMember.id : "",
+      assignedStaffId: staffMember ? staffMember.id : 0,
       roleIds:
         userToEdit.userType === UserType.staff && userToEdit.roles
           ? userToEdit.roles.map((role) => role.id)
@@ -233,102 +201,133 @@ const UserManagerPage = () => {
       }
       processedValue = selectedValues;
     } else {
-      processedValue = target.value; // Sigue siendo string aquí
-      // ****** AQUÍ LA CORRECCIÓN IMPORTANTE ******
-      if (name === "type") {
-        processedValue = Number(target.value) as UserType; // Convertir a número
+      processedValue = target.value;
+      if (name === "userType") {
+        processedValue = Number(target.value) as UserType;
       }
     }
 
     setNewUserForm((prev) => {
-      const updatedForm = { ...prev, [name]: processedValue }; // processedValue ya es del tipo correcto
+      const updatedForm = { ...prev, [name]: processedValue };
 
-      // La lógica de reseteo ahora funcionará correctamente porque newType será numérico
-      if (name === "type" && !editingUser) {
-        const newType = processedValue as UserType; // Ya es UserType (un número)
+      if (name === "userType" && !editingUser) {
+        const newType = processedValue as UserType;
         if (newType !== UserType.publisher) {
           updatedForm.publisherName = "";
           updatedForm.nif = "";
           updatedForm.address = "";
-          updatedForm.assignedStaffId = "";
+          updatedForm.assignedStaffId = 0;
         }
         if (newType !== UserType.staff) {
           updatedForm.roleIds = [];
         }
       }
+      console.log(updatedForm);
       return updatedForm;
     });
+  };
+
+  const getRolesFromForm = (): string[] => {
+    const roleIds = newUserForm.roleIds;
+    if (roleIds) {
+      const roleNamesWithPossibleUndefined = roleIds.map(
+        (id) => roleOptions.find((r) => r.id === id)?.roleName
+      );
+
+      // Filtrar los undefined y decirle a TypeScript que el resultado es string[]
+      return roleNamesWithPossibleUndefined.filter(
+        (roleName): roleName is string => roleName !== undefined
+      );
+    }
+    return [];
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (editingUser) {
-      setUserData((prevData) =>
-        prevData.map((user) => {
-          if (user.id === editingUser.id) {
-            const updatedUser: UserData = {
-              ...user,
-              user: newUserForm.username,
-              email: newUserForm.email,
-              userStatus: newUserForm.enabled ? "Enabled" : "Disabled",
-              publisherName:
-                newUserForm.type === UserType.publisher ? newUserForm.publisherName : undefined,
-              nif: newUserForm.type === UserType.publisher ? newUserForm.nif : undefined,
-              address: newUserForm.type === UserType.publisher ? newUserForm.address : undefined,
-              assignedStaff:
-                newUserForm.type === UserType.publisher && newUserForm.assignedStaffId
-                  ? mockStaffList.find((s) => s.id === Number(newUserForm.assignedStaffId))
-                      ?.username
-                  : undefined,
-              roles:
-                newUserForm.type === UserType.staff && newUserForm.roleIds
-                  ? (newUserForm.roleIds
-                      .map((id) => mockRoleOptions.find((r) => r.id === id))
-                      .filter((role) => role !== undefined) as Role[])
-                  : undefined,
-            };
-            return updatedUser;
-          }
-          return user;
-        })
-      );
+      console.log("EDITANDO");
+      if (newUserForm.userType === UserType.user) {
+        userService
+          .updateUser(newUserForm.id!, {
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
+      } else if (newUserForm.userType === UserType.staff) {
+        userService
+          .updateStaff(newUserForm.id!, {
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+            assgnedPublisherIds: [],
+            roleNames: getRolesFromForm(),
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
+      } else {
+        userService
+          .updatePublisher(newUserForm.id!, {
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+            nif: newUserForm.nif!,
+            publisherName: newUserForm.publisherName!,
+            address: newUserForm.address!,
+            assignedAdminId: newUserForm.assignedStaffId!,
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
+      }
     } else {
-      const newId = userData.length > 0 ? Math.max(...userData.map((u) => u.id)) + 1 : 1;
-      const userToAdd: UserData = {
-        id: newId,
-        username: newUserForm.username,
-        email: newUserForm.email,
-        userType: newUserForm.type,
-        isEnabled: true,
-        accountNotLocked: true,
-        lastLogin: "2022-01-01T00:00:00.000Z",
-        registerDate: "2022-01-01T00:00:00.000Z",
-      };
-
-      if (newUserForm.type === UserType.publisher) {
-        userToAdd.publisherName = newUserForm.publisherName;
-        userToAdd.nif = newUserForm.nif;
-        userToAdd.address = newUserForm.address;
-        const staff = mockStaffList.find((s) => s.id === Number(newUserForm.assignedStaffId));
-        userToAdd.assignedStaff = staff ? staff.username : undefined;
+      console.log("CREANDO");
+      if (newUserForm.userType === UserType.user) {
+        userService
+          .createUser({
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
+      } else if (newUserForm.userType === UserType.staff) {
+        userService
+          .createStaff({
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+            assgnedPublisherIds: [],
+            roleNames: getRolesFromForm(),
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
+      } else {
+        userService
+          .createPublisher({
+            username: newUserForm.username,
+            email: newUserForm.email,
+            password: newUserForm.password!,
+            nif: newUserForm.nif!,
+            publisherName: newUserForm.publisherName!,
+            address: newUserForm.address!,
+            assignedAdminId: newUserForm.assignedStaffId!,
+          })
+          .then(() => {
+            fetchAllUsers();
+          });
       }
-
-      if (
-        newUserForm.type === UserType.staff &&
-        newUserForm.roleIds &&
-        newUserForm.roleIds.length > 0
-      ) {
-        userToAdd.roles = newUserForm.roleIds
-          .map((selectedId) => mockRoleOptions.find((role) => role.id === selectedId))
-          .filter((role) => role !== undefined) as Role[];
-      }
-      setUserData((prevData) => [...prevData, userToAdd]);
     }
     closeModal();
   };
 
-  const userTypeOptions: { value: NewUserForm["type"]; label: string }[] = [
+  const userTypeOptions: { value: NewUserForm["userType"]; label: string }[] = [
     { value: UserType.user, label: "User" },
     { value: UserType.publisher, label: "Publisher" },
     { value: UserType.staff, label: "Staff" },
@@ -393,13 +392,13 @@ const UserManagerPage = () => {
               />
 
               <div className={styles.formField}>
-                <label htmlFor="type" className={styles.formLabel}>
+                <label htmlFor="userType" className={styles.formLabel}>
                   Tipo de Usuario <span className={styles.requiredIndicator}>*</span>
                 </label>
                 <select
-                  id="type"
-                  name="type"
-                  value={newUserForm.type}
+                  id="userType"
+                  name="userType"
+                  value={newUserForm.userType as number}
                   onChange={handleFormInputChange}
                   required
                   className={styles.formSelect}
@@ -413,7 +412,7 @@ const UserManagerPage = () => {
                 </select>
               </div>
 
-              {newUserForm.type === UserType.publisher && (
+              {newUserForm.userType === UserType.publisher && (
                 <>
                   <InputField
                     id="publisherName"
@@ -451,7 +450,7 @@ const UserManagerPage = () => {
                       className={styles.formSelect}
                     >
                       <option value="">-- Seleccionar Staff --</option>
-                      {mockStaffList.map((staff) => (
+                      {staffList.map((staff) => (
                         <option key={staff.id} value={staff.id}>
                           {staff.username} (ID: {staff.id})
                         </option>
@@ -461,7 +460,7 @@ const UserManagerPage = () => {
                 </>
               )}
 
-              {newUserForm.type === UserType.staff && (
+              {newUserForm.userType === UserType.staff && (
                 <div className={styles.formField}>
                   <label htmlFor="roleIds" className={styles.formLabel}>
                     Roles <span className={styles.requiredIndicator}>*</span>
@@ -476,9 +475,9 @@ const UserManagerPage = () => {
                     className={`${styles.formSelect} ${styles.formSelectMultiple}`}
                     size={5}
                   >
-                    {mockRoleOptions.map((role) => (
+                    {roleOptions.map((role) => (
                       <option key={role.id} value={role.id}>
-                        {role.name}
+                        {role.roleName} ( {role.roleDescription})
                       </option>
                     ))}
                   </select>
@@ -489,28 +488,13 @@ const UserManagerPage = () => {
                     <p className={styles.formHelperText}>
                       Seleccionados:{" "}
                       {newUserForm.roleIds
-                        ?.map((id) => mockRoleOptions.find((r) => r.id === id)?.name)
+                        ?.map((id) => roleOptions.find((r) => r.id === id)?.roleName)
                         .filter(Boolean)
                         .join(", ")}
                     </p>
                   )}
                 </div>
               )}
-
-              <div className={`${styles.formField} ${styles.checkboxContainer}`}>
-                <input
-                  type="checkbox"
-                  id="enabled"
-                  name="enabled"
-                  checked={newUserForm.enabled}
-                  onChange={handleFormInputChange}
-                  className={styles.formCheckbox}
-                />
-                <label htmlFor="enabled" className={styles.checkboxLabel}>
-                  Habilitado
-                </label>
-              </div>
-
               <div className={styles.formActions}>
                 <button type="button" onClick={closeModal} className={styles.buttonFormSecondary}>
                   Cancelar
