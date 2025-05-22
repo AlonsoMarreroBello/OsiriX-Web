@@ -9,6 +9,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  text-align: center;
 }
 
 .customHeader {
@@ -29,10 +30,11 @@ main {
   border: 1px solid var(--color-border-primary);
   padding: 1.5em 2em;
   border-radius: var(--border-radius-large);
-  width: 100%;
+  width: 70%;
   color: var(--color-text-secondary);
   border: 1px solid var(--color-accent-secondary-dark);
   transition: box-shadow 0.3s ease-in-out;
+  margin: auto;
 
   &:hover {
     box-shadow: 0 0 30px var(--color-accent-vibrant-green-shadow-hover);
@@ -59,11 +61,12 @@ main {
   padding: 2.5em 2em;
   border-radius: var(--border-radius-xlarge);
   border: 1px solid var(--color-accent-secondary-dark);
-  width: 100%;
+  width: 70%;
   box-shadow: 0 8px 25px var(--shadow-default);
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.3s ease-in-out;
+  margin: auto;
 
   &:hover {
     box-shadow: 0 0 30px var(--color-accent-vibrant-green-shadow-hover);
