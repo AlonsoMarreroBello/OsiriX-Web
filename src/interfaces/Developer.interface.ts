@@ -2,7 +2,7 @@ import { BaseDataRow } from "./CustomTable.interface";
 
 export interface DeveloperData extends BaseDataRow {
   id: number;
-  developer: string;
+  name: string;
 }
 
 export interface DeveloperRequestDto {

@@ -1,11 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from "./NewRequestModal.module.css";
 import InputField from "../InputField/InputField";
 import { useEffect, useState } from "react";
-import authService from "../../services/AuthService";
 import { RequestType } from "../../enum/RequestType.enum";
 import { CategoryData } from "../../interfaces/Category.interface";
 import { FullRequestData } from "../../interfaces/RequestData.interface";
+import { UserType } from "../../interfaces/UserData.interface";
+import developerService from "../../services/DeveloperService";
+import categoryService from "../../services/CategoryService";
+import { DeveloperData } from "../../interfaces/Developer.interface";
+import requestService from "../../services/RequestService";
+import authService from "../../services/AuthService";
 
 const NewRequestModal = ({
   requestToManage,
@@ -20,7 +24,16 @@ const NewRequestModal = ({
 }) => {
   const cleanRequest: FullRequestData = {
     id: null,
-    user: authService.getUserIdFromToken(),
+    user: {
+      id: 0,
+      username: "",
+      email: "",
+      userType: UserType.user,
+      isEnabled: true,
+      accountNotLocked: true,
+      lastLogin: "",
+      registerDate: "",
+    },
     appTitle: "",
     appDescription: "",
     publishApp: false,
@@ -33,24 +46,68 @@ const NewRequestModal = ({
     requestType: RequestType.AppUpload,
   };
 
-  const MOCK_CATEGORIES: CategoryData[] = [
-    { id: 1, name: "FPS", categoryType: "game" },
-    { id: 2, name: "TPS", categoryType: "game" },
-    { id: 3, name: "RPG", categoryType: "game" },
-    { id: 4, name: "Emulacion", categoryType: "app" },
-  ];
-
-  const MOCK_DEVELOPERS = [
-    { id: 1, name: "Alonso" },
-    { id: 2, name: "Juan" },
-    { id: 3, name: "Maria" },
-  ];
-
   const [actualRequest, setActualRequest] = useState<FullRequestData>(cleanRequest);
-  const [mockCategories, setMockCategories] = useState(MOCK_CATEGORIES);
-  const [mockDevelopers, setMockDevelopers] = useState(MOCK_DEVELOPERS);
+  const [mockCategories, setMockCategories] = useState<CategoryData[]>([]);
+  const [mockDevelopers, setMockDevelopers] = useState<DeveloperData[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    if (authService.getUserTypeFromToken() === "STAFF") {
+      setIsAdmin(true);
+    }
+
+    const fetchCategories = async () => {
+      try {
+        const tmp_categories = await categoryService.getAllCategories();
+        const data = tmp_categories!.map((category) => ({
+          id: category.categoryId,
+          name: category.categoryName,
+          categoryType: category.categoryType,
+        }));
+        setMockCategories(data || []);
+      } catch (err) {
+        console.error("Error al obtener todas las categorías:", err);
+        setMockCategories([]);
+      }
+    };
+
+    const fetchDevelopers = async () => {
+      try {
+        const tmp_developers = await developerService.getAllDevelopers();
+
+        if (!tmp_developers || tmp_developers.length === 0) {
+          setMockDevelopers([]);
+          return;
+        }
+
+        const data: DeveloperData[] = tmp_developers
+          .map((apiDev): DeveloperData | null => {
+            const numericId = Number(apiDev.id);
+
+            if (apiDev.id === null || apiDev.id === undefined || isNaN(numericId)) {
+              console.warn(
+                `Desarrollador con nombre "${apiDev.name}" tiene un ID inválido o nulo: ${apiDev.id}. Se omitirá.`
+              );
+              return null;
+            }
+
+            return {
+              id: numericId,
+              name: apiDev.name,
+            };
+          })
+          .filter((developer): developer is DeveloperData => developer !== null);
+
+        setMockDevelopers(data);
+      } catch (err) {
+        console.error("Error al obtener todos los desarrolladores:", err);
+        setMockDevelopers([]);
+      }
+    };
+
+    fetchCategories();
+    fetchDevelopers();
+
     if (requestToManage.id) {
       setActualRequest(requestToManage);
     }
@@ -64,6 +121,11 @@ const NewRequestModal = ({
 
     if (!name) {
       console.warn("Input element is missing a 'name' or 'id' attribute.", target);
+      return;
+    }
+
+    if (name === "status") {
+      setActualRequest((prev) => ({ ...prev, requestStatus: target.value }));
       return;
     }
 
@@ -124,20 +186,65 @@ const NewRequestModal = ({
     e.preventDefault();
     localStorage.setItem("requestToManage", JSON.stringify(actualRequest));
     console.log("Enviando solicitud", actualRequest);
+
+    if (requestType === RequestType.AppUpload) {
+      if (!isEditing) {
+        requestService.handlePublicationRequest({
+          id: actualRequest.id,
+          user: actualRequest.user,
+          developer: actualRequest.developer,
+          app: {
+            appId: 0,
+            name: actualRequest.appTitle!,
+            description: actualRequest.appDescription!,
+            isDownloadable: actualRequest.downloadableNow!,
+            isVisible: actualRequest.publishApp!,
+            categories: actualRequest.selectedCategories!,
+            developer: {
+              developerId: actualRequest.selectedDeveloperId!,
+              name: "",
+            },
+          },
+          requestTitle: actualRequest.appTitle!,
+          requestBody: actualRequest.appDescription!,
+          requestType: actualRequest.requestType,
+          appTitle: actualRequest.app?.name,
+          appDescription: actualRequest.app?.description,
+          publishApp: actualRequest.publishApp,
+          downloadableNow: actualRequest.downloadableNow,
+          appZipFile: actualRequest.appZipFile,
+          appIconFile: actualRequest.appIconFile,
+          appImageFile: actualRequest.appImageFile,
+          selectedCategories: actualRequest.selectedCategories,
+          selectedDeveloperId: actualRequest.selectedDeveloperId,
+          requestId: actualRequest.id,
+          appId: actualRequest.app?.appId,
+        });
+      }
+    } else {
+      if (!isEditing) {
+        requestService.createRequest(actualRequest);
+      } else {
+        requestService.updateRequest(actualRequest);
+      }
+    }
+
+    handleClose();
   };
 
   const renderStandardForm = () => (
     <>
       <InputField
-        id="requestTitle" // Clave para el estado
+        id="requestTitle"
         label="Título de la Solicitud"
         placeholder="Ej: Problemas con la subida de mis aplicaciones"
         value={actualRequest.requestTitle}
         onChange={handleInputChange}
         required
+        disabled={isAdmin}
       />
       <InputField
-        id="requestBody" // Clave para el estado
+        id="requestBody"
         as="textarea"
         label="Cuerpo de la Solicitud"
         placeholder="Describe tu problema o solicitud"
@@ -145,6 +252,7 @@ const NewRequestModal = ({
         onChange={handleInputChange}
         rows={4}
         required
+        disabled={isAdmin}
       />
     </>
   );
@@ -158,6 +266,7 @@ const NewRequestModal = ({
         value={actualRequest.appTitle}
         onChange={handleInputChange}
         required
+        disabled={isAdmin}
       />
       <InputField
         id="appDescription"
@@ -168,6 +277,7 @@ const NewRequestModal = ({
         onChange={handleInputChange}
         rows={4}
         required
+        disabled={isAdmin}
       />
 
       <div className={styles.formGroup}>
@@ -182,6 +292,7 @@ const NewRequestModal = ({
           onChange={handleInputChange}
           className={styles.selectMultiple}
           required
+          disabled={isAdmin}
         >
           {mockCategories.map((category) => (
             <option key={category.id} value={category.name}>
@@ -193,8 +304,9 @@ const NewRequestModal = ({
           <p className={styles.feedbackText}>
             Seleccionadas:{" "}
             {actualRequest.selectedCategories
-              .map((cat) => mockCategories.find((c) => c.id === cat.id)?.name || cat)
+              .map((cat) => mockCategories.find((c) => c.id === cat.id)?.name || "")
               .join(", ")}
+            .
           </p>
         )}
       </div>
@@ -210,6 +322,7 @@ const NewRequestModal = ({
           onChange={handleInputChange}
           className={styles.select}
           required
+          disabled={isAdmin}
         >
           <option value="" disabled>
             Selecciona un desarrollador...
@@ -230,6 +343,7 @@ const NewRequestModal = ({
             name="publishApp"
             checked={actualRequest.publishApp}
             onChange={handleInputChange}
+            disabled={isAdmin}
           />
           ¿Publicar la aplicación al ser aprobada?
         </label>
@@ -243,6 +357,7 @@ const NewRequestModal = ({
             name="downloadableNow"
             checked={actualRequest.downloadableNow}
             onChange={handleInputChange}
+            disabled={isAdmin}
           />
           ¿Permitir descarga inmediata tras publicación?
         </label>
@@ -261,6 +376,7 @@ const NewRequestModal = ({
             required={!isEditing}
             onChange={handleFileChange}
             className={styles.fileInputDirect}
+            disabled={isAdmin}
           />
           {actualRequest.appIconFile && (
             <p className={styles.fileName}>Seleccionado: {actualRequest.appIconFile.name}</p>
@@ -279,6 +395,7 @@ const NewRequestModal = ({
             required={!isEditing}
             onChange={handleFileChange}
             className={styles.fileInputDirect}
+            disabled={isAdmin}
           />
           {actualRequest.appImageFile && (
             <p className={styles.fileName}>Seleccionado: {actualRequest.appImageFile.name}</p>
@@ -297,6 +414,7 @@ const NewRequestModal = ({
             required={!isEditing}
             onChange={handleFileChange}
             className={styles.fileInputDirect}
+            disabled={isAdmin}
           />
           {actualRequest.appZipFile && (
             <p className={styles.fileName}>Seleccionado: {actualRequest.appZipFile.name}</p>
@@ -317,6 +435,34 @@ const NewRequestModal = ({
         <form onSubmit={handleSubmit} className={styles.form}>
           {requestType === RequestType.Standard && renderStandardForm()}
           {requestType === RequestType.AppUpload && renderAppUploadForm()}
+          {isAdmin && (
+            <>
+              <div>
+                <select
+                  id="status"
+                  name="status"
+                  value={actualRequest.requestStatus}
+                  onChange={handleInputChange}
+                  className={styles.select}
+                >
+                  <option value={"PENDANT"}>Pendiente</option>
+                  <option value={"ACCEPTED"}>Aceptar</option>
+                  <option value={"REVOKED"}>Rechazar</option>
+                </select>
+              </div>
+              <div>
+                <InputField
+                  id="adminComments"
+                  label="Comentarios"
+                  as="textarea"
+                  placeholder="Escriba aquí sus rollos de administrador ..."
+                  value={actualRequest.adminComments}
+                  onChange={handleInputChange}
+                  rows={4}
+                />
+              </div>
+            </>
+          )}
           <div>
             <button className={styles.sendButton} type="submit">
               Enviar

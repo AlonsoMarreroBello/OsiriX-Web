@@ -141,11 +141,11 @@ const CustomTable = <T extends BaseDataRow>({
                 <tr
                   key={row.id}
                   className={styles.tableRow}
-                  onClick={onRowClick ? () => handleEffectiveRowClick(row.id) : undefined}
+                  onClick={onRowClick ? () => handleEffectiveRowClick(row.id!) : undefined}
                   onKeyDown={
                     onRowClick
                       ? (e) => {
-                          if (e.key === "Enter") handleEffectiveRowClick(row.id);
+                          if (e.key === "Enter") handleEffectiveRowClick(row.id!);
                         }
                       : undefined
                   }
