@@ -1,11 +1,18 @@
+import { InputFieldProps } from "../../interfaces/InputField.interface";
 import styles from "./InputField.module.css";
 
-interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  id: string;
-}
-
 const InputField = ({ label, id, ...props }: InputFieldProps) => {
+  if (props.as === "textarea") {
+    return (
+      <div className={styles.inputGroup}>
+        <label htmlFor={id} className={styles.label}>
+          {label}
+        </label>
+        <textarea id={id} className={styles.input} {...props} />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.inputGroup}>
       <label htmlFor={id} className={styles.label}>

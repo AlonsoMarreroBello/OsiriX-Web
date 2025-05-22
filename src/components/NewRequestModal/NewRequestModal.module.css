@@ -1,0 +1,346 @@
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--shadow-darker);
+  border-radius: 10px;
+  width: fit-content;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.modalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto;
+  background-color: var(--color-bg-secondary);
+  padding: 4rem;
+  border: 1px solid var(--color-accent-vibrant-green-darker);
+  box-shadow: 0 0 100px 10px var(--color-accent-vibrant-green-shadow);
+  border-radius: var(--border-radius-xlarge);
+  min-width: 40vw;
+  min-height: auto;
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.modalWrapper h1 {
+  margin-top: 0;
+  font-size: 2rem;
+  text-align: center;
+  color: var(--color-text-headings-light);
+}
+
+/* NewRequestModal.module.css */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  /* Espacio entre grupos de campos */
+  width: 100%;
+  /* max-width: 600px; Ya no es necesario si modalWrapper tiene un ancho max */
+  margin-top: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  /* Espacio entre label y su input/select */
+}
+
+.label,
+.checkboxLabel {
+  /* Aplicado a <label> directamente */
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.1rem;
+  /* Menos margen si el gap del formGroup ya espacia */
+}
+
+.checkboxGroup {
+  /* Contenedor específico para label de checkbox y su input */
+  display: flex;
+  align-items: center;
+  /* Alinea el texto del label con el checkbox */
+  margin-top: 0.5rem;
+  /* Espacio extra para grupos de checkboxes */
+}
+
+.checkboxLabel {
+  /* Estilos específicos para el label que envuelve el input checkbox */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  /* Peso normal para el texto del label */
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent-vibrant-green-main);
+  cursor: pointer;
+  background-color: var(--color-bg-input);
+  /* Fondo cuando no está marcado */
+  border: 1px solid var(--color-border-primary);
+  border-radius: 4px;
+  /* Ligeramente redondeado */
+  appearance: none;
+  /* Para estilizar el check custom si se desea, pero accent-color es más simple */
+  position: relative;
+  /* Para pseudo-elementos si se quiere un check custom */
+}
+
+/* Estilo para el check custom (opcional, accent-color suele ser suficiente) */
+.checkboxLabel input[type="checkbox"]:checked::before {
+  content: '✔';
+  /* O un SVG */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: var(--color-text-on-accent-vibrant);
+  /* O el color que uses para el check */
+}
+
+.checkboxLabel input[type="checkbox"]:checked {
+  background-color: var(--color-accent-vibrant-green-main);
+  border-color: var(--color-accent-vibrant-green-dark);
+}
+
+
+.checkboxLabel input[type="checkbox"]:focus-visible {
+  /* Estilo de foco más moderno */
+  outline: 2px solid var(--color-accent-pastel-main);
+  outline-offset: 2px;
+}
+
+/* Clases para los <input> y <textarea> que vienen de InputField.tsx */
+/* Asegúrate que InputField.tsx aplique estas clases a sus elementos internos. */
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-medium);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  /* Importante */
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-pastel-main);
+  box-shadow: 0 0 0 3px var(--color-accent-pastel-shadow);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-placeholder);
+  opacity: 0.8;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.select,
+.selectMultiple {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-medium);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23CDD3DA'%3E%3Cpath d='M8 11L2 5h12L8 11z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select:focus,
+.selectMultiple:focus {
+  outline: none;
+  border-color: var(--color-accent-pastel-main);
+  box-shadow: 0 0 0 3px var(--color-accent-pastel-shadow);
+}
+
+.selectMultiple {
+  min-height: 120px;
+  padding-right: 1rem;
+  background-image: none;
+}
+
+.selectMultiple option {
+  padding: 0.6rem 0.8rem;
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+}
+
+.selectMultiple option:checked {
+  /* Estilo en algunos navegadores para opción seleccionada */
+  background-color: var(--color-accent-vibrant-green-main);
+  color: var(--color-text-on-accent-vibrant);
+}
+
+.fileInputDirect {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fileInputDirect::file-selector-button {
+  padding: 0.6rem 1.2rem;
+  margin-right: 1rem;
+  background-color: var(--color-accent-pastel-main);
+  color: var(--color-text-on-pastel);
+  border: none;
+  border-radius: var(--border-radius-small);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fileInputDirect::file-selector-button:hover {
+  background-color: var(--color-accent-pastel-dark);
+}
+
+.feedbackText,
+.fileName {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.3rem;
+  padding-left: 0.2rem;
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.button {
+  padding: 0.7rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-medium);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  line-height: 1.5;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent-pastel-main);
+  outline-offset: 2px;
+}
+
+.sendButton {
+  background-color: var(--color-accent-vibrant-green-main);
+  color: var(--color-text-on-accent-vibrant);
+  border-color: var(--color-accent-vibrant-green-dark);
+}
+
+.sendButton:hover {
+  background-color: var(--color-accent-vibrant-green-dark);
+  border-color: var(--color-accent-vibrant-green-darker);
+}
+
+.cancelButton {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border-secondary);
+}
+
+.cancelButton:hover {
+  background-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-tertiary);
+}
+
+.modalCloseButtonTop {
+  /* Para el botón 'X' en la esquina superior */
+  position: absolute;
+  top: 1rem;
+  /* Ajustar según el padding del .modalWrapper global */
+  right: 1rem;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  border: none;
+  font-size: 1.8rem;
+  /* Grande para que sea fácil de clickear */
+  padding: 0.25rem 0.5rem;
+  /* Padding mínimo para el área de click */
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  /* Hacerlo redondo */
+  width: 36px;
+  /* Tamaño fijo */
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modalCloseButtonTop:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.modalCloseButtonTop:focus-visible {
+  outline: 2px solid var(--color-accent-pastel-main);
+  outline-offset: 1px;
+}
+
+.statusInfo {
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+  border-left: 4px solid var(--color-accent-secondary-main);
+  border-radius: var(--border-radius-small);
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.fileGroup {
+  display: flex;
+  flex-direction: row;
+}

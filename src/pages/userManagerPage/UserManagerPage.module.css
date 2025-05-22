@@ -1,0 +1,366 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+}
+
+.titleContainer {
+  border-bottom: 1px solid var(--color-accent-pastel-border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin: 0.5rem;
+  padding-left: 1rem;
+  text-align: start;
+}
+
+.tableCard {
+  height: 67vh;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.actionButtonEdit {
+  background-color: var(--color-accent-vibrant-green-shadow);
+  color: var(--color-accent-vibrant-green-main);
+  margin-right: 1rem;
+
+  &:hover {
+    background-color: var(--color-accent-vibrant-green-shadow);
+    border-color: var(--color-accent-vibrant-green-main);
+    color: var(--color-accent-vibrant-green-main);
+    transform: scale(1.1);
+  }
+}
+
+.actionButtonDelete {
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-dark);
+  color: var(--color-error-main);
+
+  &:hover {
+    background-color: var(--color-error-bg);
+    border-color: var(--color-error-main);
+    color: var(--color-error-main);
+    transform: scale(1.1);
+  }
+}
+
+.disabled {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.disabled:hover {
+  transform: none;
+  /* Sin efecto hover para deshabilitados */
+  background-color: var(--color-bg-tertiary);
+  /* Mantiene el color */
+  color: var(--color-text-tertiary);
+}
+
+/* Botón para abrir el modal (Crear Usuario) */
+.buttonOpenModal {
+  background-color: var(--color-bg-input);
+  color: var(--color-accent-pastel-main);
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  height: fit-content;
+  width: fit-content;
+}
+
+.buttonOpenModal:hover {
+  background-color: var(--color-accent-pastel-shadow);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(17, 19, 22, 0.8);
+  /* var(--color-bg-header) con opacidad */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalContent {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  padding: 25px 30px;
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 8px 25px var(--shadow-darker);
+  width: 100%;
+  max-width: 550px;
+  /* Un poco más ancho */
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-primary);
+  padding-bottom: 15px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.6rem;
+  /* Un poco más grande */
+  color: var(--color-text-headings-light);
+  font-weight: 500;
+}
+
+.modalCloseButton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  /* Más grande para que sea fácil de clickear */
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.modalCloseButton:hover {
+  color: var(--color-accent-pastel-main);
+}
+
+.userForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  /* Un poco más de espacio entre campos */
+}
+
+/* Estilos para los campos nativos (select, checkbox) y labels */
+.formField {
+  /* Usado como wrapper para label + input si InputField no lo hace */
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  /* Espacio entre label y su input */
+}
+
+.formLabel {
+  font-weight: 500;
+  /* Menos bold que el default */
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.requiredIndicator {
+  color: var(--color-error-main);
+  margin-left: 0.25rem;
+}
+
+.formInput,
+/* Clase genérica para inputs si no usas InputField */
+.formSelect {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-small);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formInput::placeholder,
+.formSelect::placeholder {
+  /* Para InputField, esto debería manejarse internamente */
+  color: var(--color-text-placeholder);
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: var(--color-accent-pastel-main);
+  box-shadow: 0 0 0 3px var(--color-accent-pastel-shadow);
+}
+
+.formSelect option {
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+}
+
+.formSelect option:checked {
+  background-color: var(--color-accent-vibrant-green-main);
+  color: var(--color-text-on-accent-vibrant);
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  gap: 0.6rem;
+}
+
+.formCheckbox {
+  appearance: none;
+  background-color: var(--color-bg-input);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 4px;
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.formCheckbox:checked {
+  background-color: var(--color-accent-vibrant-green-main);
+  border-color: var(--color-accent-vibrant-green-dark);
+}
+
+.formCheckbox:checked::before {
+  content: '✓';
+  font-size: 0.9em;
+  color: var(--color-text-on-accent-vibrant);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+  font-weight: bold;
+}
+
+.formCheckbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-pastel-shadow);
+}
+
+.checkboxLabel {
+  font-weight: normal;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
+/* Botones para el formulario del modal */
+.buttonFormPrimary {
+  /* Crear Usuario */
+  background-color: var(--color-accent-vibrant-green-main);
+  color: var(--color-text-on-accent-vibrant);
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.buttonFormPrimary:hover {
+  background-color: var(--color-accent-vibrant-green-dark);
+}
+
+.buttonFormPrimary:disabled {
+  /* Para cuando el form no es válido */
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.buttonFormSecondary {
+  /* Cancelar */
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.buttonFormSecondary:hover {
+  background-color: var(--color-border-primary);
+  /* Un poco más oscuro */
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
+
+.formSelectMultiple {
+  height: auto;
+  /* Permite que el atributo 'size' del select controle la altura */
+  padding: 0.8rem;
+  /* Ajustar padding si es necesario para que se vea bien con el size */
+}
+
+/* Texto de ayuda debajo de algunos campos */
+.formHelperText {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Ajustes generales a .formField si es necesario */
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+  /* Reducido un poco el margen inferior de cada formField */
+}
+
+.userForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  /* Ajusta el espacio general entre campos y secciones condicionales */
+}
