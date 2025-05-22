@@ -1,9 +1,20 @@
 import { Role } from "../services/AuthService";
+import { Developer, Publisher } from "./AplicationData.interface";
 import { CategoryData } from "./Category.interface";
 
 export interface BaseDataRow {
   id: string | number | null;
-  [key: string]: string | number | boolean | null | undefined | Role[] | File | CategoryData[];
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | Role[]
+    | File
+    | CategoryData[]
+    | Publisher
+    | Developer;
 }
 
 export interface DataColumnDefinition<T extends BaseDataRow> {

@@ -1,10 +1,35 @@
+import { useEffect, useState } from "react";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import CustomTable from "../../components/CustomTable/CustomTable";
 import { ApplicationData } from "../../interfaces/AplicationData.interface";
 import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./AplicationsManagerPage.module.css";
+import appService from "../../services/AppService";
 
 const ApplicationsManagerPage = () => {
+  const [applicationData, setApplicationData] = useState<ApplicationData[]>([]);
+
+  const fetchApplications = async () => {
+    const tmp_data = await appService.getAllApps();
+    const data = tmp_data!.map((app: ApplicationData) => ({
+      id: Number(app.appId),
+      name: app.name,
+      publisher: app.publisher,
+      developer: app.developer,
+      isDownloadable: app.isDownloadable,
+      isVisible: app.isVisible,
+      isPublished: app.isPublished,
+      downloads: app.downloads,
+    }));
+    console.log(data);
+
+    setApplicationData(data || []);
+  };
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
   const applicationColumns: TableColumn<ApplicationData>[] = [
     { type: "data", field: "id", headerName: "ID", width: 10, sortable: true },
     {
@@ -14,8 +39,33 @@ const ApplicationsManagerPage = () => {
       width: "auto",
       sortable: true,
     },
-    { type: "data", field: "publsher", headerName: "Publisher", width: 100, sortable: true },
-    { type: "data", field: "developer", headerName: "Developer", width: 100, sortable: true },
+    {
+      type: "data",
+      field: "publsher",
+      headerName: "Publisher",
+      width: 100,
+      sortable: true,
+      renderCell(_value, row) {
+        return row.publisher.publisherName;
+      },
+    },
+    {
+      type: "data",
+      field: "developer",
+      headerName: "Developer",
+      width: 100,
+      sortable: true,
+      renderCell(_value, row) {
+        return row.developer.name;
+      },
+    },
+    {
+      type: "data",
+      field: "isPublished",
+      headerName: "Publicado",
+      width: 100,
+      sortable: true,
+    },
     {
       type: "data",
       field: "isDownloadable",
@@ -25,7 +75,7 @@ const ApplicationsManagerPage = () => {
     },
     {
       type: "data",
-      field: "isShown",
+      field: "isVisible",
       headerName: "Visible",
       width: 100,
       sortable: true,
@@ -40,16 +90,16 @@ const ApplicationsManagerPage = () => {
             className={styles.actionButtonEdit}
             onClick={(e) => {
               e.stopPropagation();
-              console.log(" Edit ", row);
+              handleToggleVisibility(row.id);
             }}
           >
-            {row.isShown ? "Ocultar" : "Mostrar"}
+            {row.isVisible ? "Ocultar" : "Mostrar"}
           </button>
           <button
             className={styles.actionButtonEdit}
             onClick={(e) => {
               e.stopPropagation();
-              console.log(" Edit ", row);
+              handleToggleDownloadable(row.id);
             }}
           >
             Alternar descarga
@@ -58,36 +108,30 @@ const ApplicationsManagerPage = () => {
             className={styles.actionButtonDelete}
             onClick={(e) => {
               e.stopPropagation();
-              console.log(" Delete ", row);
+              handleTogglePublicate(row.id);
             }}
           >
-            Eliminar
+            {row.isPublished ? "Publicar" : "Desactivar"}
           </button>
         </div>
       ),
     },
   ];
 
-  const applicationData: ApplicationData[] = [
-    {
-      id: 1,
-      name: "OsiriX",
-      publsher: "Alonso",
-      developer: "Alonso",
-      isDownloadable: true,
-      isShown: true,
-      downloads: 100,
-    },
-    {
-      id: 2,
-      name: "OsiriX",
-      publsher: "Alonso",
-      developer: "Alonso",
-      isDownloadable: false,
-      isShown: false,
-      downloads: 0,
-    },
-  ];
+  const handleTogglePublicate = async (id: number) => {
+    await appService.togglePublicateApp(id);
+    await fetchApplications();
+  };
+
+  const handleToggleVisibility = async (id: number) => {
+    await appService.toggleAppVisibility(id);
+    await fetchApplications();
+  };
+
+  const handleToggleDownloadable = async (id: number) => {
+    await appService.toggleAppDownloadable(id);
+    await fetchApplications();
+  };
 
   const handleGlobalRowClick = (id: string | number) => {
     console.log("Clic en fila (global), ID:", id);

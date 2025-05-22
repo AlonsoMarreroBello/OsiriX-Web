@@ -1,11 +1,22 @@
 import { BaseDataRow } from "./CustomTable.interface";
 
+export interface Publisher {
+  publisherId: number;
+  publisherName: string;
+}
+
+export interface Developer {
+  developerId: number;
+  name: string;
+}
+
 export interface ApplicationData extends BaseDataRow {
   id: number;
   name: string;
-  publsher: string;
-  developer: string;
+  publisher: Publisher;
+  developer: Developer;
   isDownloadable: boolean;
-  isShown: boolean;
+  isVisible: boolean;
+  isPublished: boolean;
   downloads: number;
 }
