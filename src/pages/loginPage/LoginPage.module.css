@@ -156,7 +156,7 @@
   margin-bottom: 2.5rem;
   color: var(--color-text-primary);
   padding: 0.6rem 1.5rem;
-  border: 2px solid var(--color-accent-pastel-border);
+  border: 2px solid var(--color-accent-vibrant-green-darker);
   border-radius: var(--border-radius-medium);
   text-align: center;
 }
@@ -181,22 +181,16 @@
   text-decoration: underline;
 }
 
-.toggleLink {
-  margin-top: 2.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-  color: var(--color-text-secondary);
-}
-
-.toggleLink a {
+.forgotPassword {
   color: var(--color-accent-pastel-main);
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
 }
 
-.toggleLink a:hover {
+.forgotPassword:hover {
   text-decoration: underline;
+  color: var(--color-accent-vibrant-green-main)
 }
 
 .loginButton {
