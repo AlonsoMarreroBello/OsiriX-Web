@@ -2,6 +2,13 @@ import axios from "axios";
 import authService from "./AuthService";
 import { ApplicationData } from "../interfaces/AplicationData.interface";
 
+/**
+ * Retireves all the apps from the API
+ * @returns An array of ApplicationData objects or null if the response from the API does not have the expected structure.
+ * @error If the response from the API does not contain a `data` property, a warning will be logged and `null` will be returned.
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllApps = async () => {
   try {
     const token = authService.getToken();
@@ -26,6 +33,14 @@ const getAllApps = async () => {
   }
 };
 
+/**
+ * Changes the visibility of an app by sending a PATCH request to the API endpoint with the app ID and authorization token.
+ * @param {number} id - The unique identifier of the app you want to change the visibility of.
+ * @returns The information of the app with the updated visibility or null if the response from the API does not have the expected structure.
+ * @error If the response from the API does not contain a `data` property, a warning will be logged and `null` will be returned.
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const toggleAppVisibility = async (id: number) => {
   try {
     const token = authService.getToken();
@@ -54,6 +69,14 @@ const toggleAppVisibility = async (id: number) => {
   }
 };
 
+/**
+ * Changes the downloadable status of an app by sending a PATCH request to the API endpoint with the app ID and authorization token.
+ * @param {number} id - The unique identifier of the app you want to change the downloadable status of.
+ * @returns The information of the app with the updated downloadable status or null if the response from the API does not have the expected structure.
+ * @error If the response from the API does not contain a `data` property, a warning will be logged and `null` will be returned.
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const toggleAppDownloadable = async (id: number) => {
   try {
     const token = authService.getToken();
@@ -82,6 +105,14 @@ const toggleAppDownloadable = async (id: number) => {
   }
 };
 
+/**
+ * Changes the publication status of an app by sending a PATCH request to the API endpoint with the app ID and authorization token.
+ * @param {number} id - The unique identifier of the app you want to change the publication status of.
+ * @returns The information of the app with the updated publication status or null if the response from the API does not have the expected structure.
+ * @error If the response from the API does not contain a `data` property, a warning will be logged and `null` will be returned.
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const togglePublicateApp = async (id: number) => {
   try {
     const token = authService.getToken();
@@ -110,6 +141,13 @@ const togglePublicateApp = async (id: number) => {
   }
 };
 
+/**
+ * Retireves all the apps ralted to a publisher from the API
+ * @returns An array of ApplicationData objects or null if the response from the API does not have the expected structure.
+ * @error If the response from the API does not contain a `data` property, a warning will be logged and `null` will be returned.
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllAppsByPublisher = async () => {
   try {
     const token = authService.getToken();

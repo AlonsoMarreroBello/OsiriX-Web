@@ -9,6 +9,17 @@ interface CategoryResponseDto {
   categoryType: CategoryType;
 }
 
+/**
+ * Fetches all categories from the API
+ * @returns an Array of CategoryResponseDto objects or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllCategories = async (): Promise<CategoryResponseDto[] | null> => {
   try {
     const token = authService.getToken();
@@ -33,6 +44,19 @@ const getAllCategories = async (): Promise<CategoryResponseDto[] | null> => {
   }
 };
 
+/**
+ * Creates a new category in the API
+ * @param {CategoryRequestDto} categoryData - The data to be sent in the request body.
+ *
+ * @returns the data of the created category or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const createCategory = async (categoryData: CategoryRequestDto) => {
   try {
     const token = authService.getToken();
@@ -63,6 +87,18 @@ const createCategory = async (categoryData: CategoryRequestDto) => {
   }
 };
 
+/**
+ * Deletes a category from the API
+ * @param id the id of the category to be deleted
+ * @returns the data of the deleted category or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const deleteCategory = async (id: number) => {
   try {
     const token = authService.getToken();
@@ -89,6 +125,19 @@ const deleteCategory = async (id: number) => {
   }
 };
 
+/**
+ * Updates a category in the API
+ * @param id the id of the category to be updated
+ * @param categoryData  the data to be sent in the request body
+ * @returns the data of the updated category or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const updateCategory = async (
   id: number,
   categoryData: CategoryRequestDto
@@ -106,6 +155,7 @@ const updateCategory = async (
     );
 
     if (response.data && response.data.data) {
+      toast.success("Categoría actualizada correctamente.");
       return response.data.data as CategoryData;
     } else {
       console.warn(

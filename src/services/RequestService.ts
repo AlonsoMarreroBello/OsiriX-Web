@@ -4,6 +4,17 @@ import { Application, FullRequestData } from "../interfaces/RequestData.interfac
 import developerService from "./DeveloperService";
 import { toast } from "react-toastify";
 
+/**
+ * Fetches all requests from the API
+ * @returns an Array of `FullRequestData` objects or `null` if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllRequests = async () => {
   try {
     const token = authService.getToken();
@@ -28,6 +39,17 @@ const getAllRequests = async () => {
   }
 };
 
+/**
+ * Fetches all publication requests from the API
+ * @returns an Array of `FullRequestData` objects or `null` if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllPublicationRequests = async () => {
   try {
     const token = authService.getToken();
@@ -56,6 +78,17 @@ const getAllPublicationRequests = async () => {
   }
 };
 
+/**
+ * Fetches all requests related to the actual user from the API
+ * @returns an Array of `FullRequestData` objects or `null` if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getRequestsByUser = async () => {
   try {
     const token = authService.getToken();
@@ -84,6 +117,17 @@ const getRequestsByUser = async () => {
   }
 };
 
+/**
+ * Fetches all publication requests related to the actual user from the API
+ * @returns an Array of `FullRequestData` objects or `null` if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getPublicationRequestsByUser = async () => {
   try {
     const token = authService.getToken();
@@ -112,6 +156,18 @@ const getPublicationRequestsByUser = async () => {
   }
 };
 
+/**
+ * Creates a new request in the API
+ * @param request the data to be sent in the request body
+ * @returns the data of the created request or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const createRequest = async (request: FullRequestData) => {
   try {
     const token = authService.getToken();
@@ -147,6 +203,18 @@ const createRequest = async (request: FullRequestData) => {
   }
 };
 
+/**
+ * Updates a request in the API
+ * @param request the data to be sent in the request body
+ * @returns the data of the updated request or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const updateRequest = async (request: FullRequestData) => {
   try {
     const token = authService.getToken();
@@ -184,6 +252,18 @@ const updateRequest = async (request: FullRequestData) => {
   }
 };
 
+/**
+ * Creates a new app in the API
+ * @param app the data to be sent in the request body
+ * @returns the data of the created app or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const createApp = async (app: Application) => {
   try {
     const token = authService.getToken();
@@ -233,6 +313,20 @@ const createApp = async (app: Application) => {
   }
 };
 
+/**
+ * Creates a new publication request in the API
+ * @param appId the id of the app to be published
+ * @param developerId the id of the developer to be assigned
+ * @param request the data to be sent in the request body
+ * @returns the data of the created publication request or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const createPublicationRequest = async (
   appId: number,
   developerId: number,
@@ -275,6 +369,21 @@ const createPublicationRequest = async (
   }
 };
 
+/**
+ * Batch uploads files to the API
+ * @param appId the id of the app to be published
+ * @param icon the icon file to be uploaded
+ * @param images the array of images to be uploaded
+ * @param zip the zip file to be uploaded
+ * @returns the data of the created publication request or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: File) => {
   try {
     const token = authService.getToken();
@@ -336,6 +445,17 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
   }
 };
 
+/**
+ * Handles a publication request process
+ * @param request the data to be sent in the request body
+ * @returns void
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const handlePublicationRequest = async (request: FullRequestData) => {
   try {
     if (request.app) {

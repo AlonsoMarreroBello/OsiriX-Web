@@ -494,6 +494,18 @@ const togleUserEnabled = async (id: number) => {
   }
 };
 
+/**
+ * Requests a publisher account to be created in the API
+ * @param state the data to be sent in the request body
+ * @returns the data of the created publisher or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const requestPublsherAccess = async (state: publisherRequestDto) => {
   try {
     const response = await axios.post("http://localhost:8080/api/v1/publishers", {

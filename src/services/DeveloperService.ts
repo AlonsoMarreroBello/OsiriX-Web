@@ -3,6 +3,17 @@ import { DeveloperData, DeveloperRequestDto } from "../interfaces/Developer.inte
 import authService from "./AuthService";
 import { toast } from "react-toastify";
 
+/**
+ * Fetches all developers from the API
+ * @returns an Array of `DeveloperData` objects or `null` if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getAllDevelopers = async (): Promise<DeveloperData[] | null> => {
   try {
     const token = authService.getToken();
@@ -27,6 +38,19 @@ const getAllDevelopers = async (): Promise<DeveloperData[] | null> => {
   }
 };
 
+/**
+ * Creates a new developer in the API
+ * @param {DeveloperRequestDto} developerData - The data to be sent in the request body.
+ *
+ * @returns the data of the created developer or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const createDeveloper = async (developerData: DeveloperRequestDto) => {
   try {
     const token = authService.getToken();
@@ -53,6 +77,18 @@ const createDeveloper = async (developerData: DeveloperRequestDto) => {
   }
 };
 
+/**
+ * Deletes a developer from the API
+ * @param id the id of the developer to be deleted
+ * @returns the data of the deleted developer or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const deleteDeveloper = async (id: number) => {
   try {
     const token = authService.getToken();
@@ -79,6 +115,19 @@ const deleteDeveloper = async (id: number) => {
   }
 };
 
+/**
+ * Updates a developer in the API
+ * @param id the id of the developer to be updated
+ * @param developerData  the data to be sent in the request body
+ * @returns the data of the updated developer or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const updateDeveloper = async (
   id: number,
   developerData: DeveloperRequestDto
@@ -112,6 +161,18 @@ const updateDeveloper = async (
   }
 };
 
+/**
+ * Gets a developer from the API
+ * @param id the id of the developer to be fetched
+ * @returns the data of the developer or null if the response from the API
+ * does not have the expected structure.
+ *
+ * @error If the response from the API does not contain a `data` property, a warning will be logged
+ * and `null` will be returned.
+ *
+ * @date 22/05/2025
+ * @author Alonso Marrero Bello
+ */
 const getDeveloperById = async (id: number): Promise<DeveloperData | null> => {
   try {
     const token = authService.getToken();
