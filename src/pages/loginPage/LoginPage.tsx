@@ -3,7 +3,6 @@ import styles from "./LoginPage.module.css";
 import InputField from "../../components/InputField/InputField";
 import authService from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import logoUrl from "../../assets/OsiriX-Logo.png";
 import { toast } from "react-toastify";
 
@@ -54,7 +53,7 @@ const LoginPage = () => {
       <div className={styles.container}>
         <div className={styles.leftPanel}>
           <img src={logoUrl} alt="Osirix Logo" className={styles.logo} />
-          <p className={styles.quote}>Frase de ejemplo</p>
+          <p className={styles.quote}></p>
         </div>
         <div className={styles.rightPanel}>
           <div className={styles.formContainer}>
@@ -80,9 +79,9 @@ const LoginPage = () => {
                 ¿Has olvidado la contraseña?
               </a>
               {error && <p className={styles.error}>{error}</p>}
-              <Button type="submit" variant="contained" className={styles.loginButton}>
+              <button type="submit" className={styles.loginButton}>
                 Iniciar Sesión
-              </Button>
+              </button>
             </form>
           </div>
         </div>

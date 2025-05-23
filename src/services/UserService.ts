@@ -494,6 +494,35 @@ const togleUserEnabled = async (id: number) => {
   }
 };
 
+const requestPublsherAccess = async (state: publisherRequestDto) => {
+  try {
+    const response = await axios.post("http://localhost:8080/api/v1/publishers", {
+      username: state.username,
+      email: state.email,
+      password: state.password,
+      nif: state.nif,
+      publisherName: state.username,
+      address: state.address,
+      assignedAdminId: undefined,
+    });
+
+    if (response.data && response.data.data) {
+      toast.success("Solicitud enviada correctamente.");
+      return response.data.data as UserData;
+    } else {
+      console.warn(
+        "La respuesta de la API no tiene la estructura esperada (response.data.data).",
+        response.data
+      );
+    }
+    return null;
+  } catch (err) {
+    toast.error("No se pudo enviar la solicitud. Inténtalo de nuevo.");
+    console.error("Error al enviar solicitud:", err);
+    throw err;
+  }
+};
+
 const userService = {
   getAllNormalUsers,
   getAllStaffs,
@@ -506,6 +535,7 @@ const userService = {
   updateStaff,
   updatePublisher,
   togleUserEnabled,
+  requestPublsherAccess,
 };
 
 export default userService;

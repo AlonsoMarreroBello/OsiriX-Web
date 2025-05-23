@@ -33,7 +33,6 @@
   border-radius: var(--border-radius-large);
   border: 1px solid var(--color-border-primary);
   box-shadow: 0 0 40px var(--color-accent-vibrant-green-shadow-hover);
-  text-align: left;
 }
 
 .formHeader {
@@ -66,6 +65,7 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+  margin-top: 0.5rem;
 }
 
 /* Los estilos de InputField están en su propio módulo y ya usan el foco verde */
@@ -84,7 +84,8 @@
   border-radius: var(--border-radius-small);
   width: auto;
   align-self: center;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   min-width: 220px;
   /* Ancho mínimo para buena presencia */
   box-shadow: 0 3px 8px var(--color-accent-vibrant-green-shadow);

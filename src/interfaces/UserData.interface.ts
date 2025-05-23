@@ -52,5 +52,5 @@ export interface publisherRequestDto extends UserRequestDto {
   nif: string;
   publisherName: string;
   address: string;
-  assignedAdminId: number;
+  assignedAdminId: number | undefined;
 }
