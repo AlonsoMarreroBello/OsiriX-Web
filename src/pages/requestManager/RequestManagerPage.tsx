@@ -34,6 +34,11 @@ const RequestManagerPage = () => {
   const [requestType, setRequestType] = useState<RequestType>(RequestType.Standard);
   const [requestsList, setRequestsList] = useState<FullRequestData[]>([]);
 
+  /**
+   * Maps a raw request to a full request data object
+   * @param rawRequest the raw request data
+   * @returns the full request data object
+   */
   const mapRawRequestToFullRequestData = (rawRequest: FullRequestData): FullRequestData => {
     return {
       id: Number(rawRequest.requestId),
@@ -61,6 +66,10 @@ const RequestManagerPage = () => {
     };
   };
 
+  /**
+   * Fetches the requests from the API that the user has access to
+   * @returns void
+   */
   const fetchRequests = async () => {
     try {
       if (authService.getUserTypeFromToken() === "STAFF") {
@@ -183,6 +192,11 @@ const RequestManagerPage = () => {
     },
   ];
 
+  /**
+   * Handles the click on a row in the table
+   * @param id the id of the row to be clicked
+   * @returns void
+   */
   const handleGlobalRowClick = (id: string | number) => {
     requestsList.forEach((element) => {
       if (element.id === id) {
@@ -191,6 +205,11 @@ const RequestManagerPage = () => {
     });
   };
 
+  /**
+   * Handles the opening of the new request modal
+   * @param id the id of the request to be edited
+   * @returns void
+   */
   const activateNewRequestModal = (id?: string | number) => {
     setIsOpenNewRequestModal(true);
     if (id) {
@@ -210,6 +229,10 @@ const RequestManagerPage = () => {
     }
   };
 
+  /**
+   * Handles the closing of the new request modal
+   * @returns void
+   */
   const deactivateNewRequestModal = () => {
     setIsOpenNewRequestModal(false);
     setIsEditing(false);
@@ -218,6 +241,11 @@ const RequestManagerPage = () => {
     fetchRequests();
   };
 
+  /**
+   * Handles the change of the request type
+   * @param e the event object
+   * @returns void
+   */
   const handleRequestTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRequestType(e.target.value as RequestType);
   };

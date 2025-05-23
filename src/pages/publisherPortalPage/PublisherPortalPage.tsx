@@ -4,6 +4,7 @@ import InputField from "../../components/InputField/InputField";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import userService from "../../services/UserService";
+import { toast } from "react-toastify";
 
 const PublisherPortalPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,11 @@ const PublisherPortalPage = () => {
 
   const [state, setState] = useState(initialState);
 
+  /**
+   * Handles the change of an input field
+   * @param e the event object
+   * @returns void
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     console.log(e.target.value);
 
@@ -28,10 +34,38 @@ const PublisherPortalPage = () => {
     }));
   };
 
+  /**
+   * Handles the register process
+   * @param e the event object
+   * @returns void
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(state);
+    if (state.username.trim() === "") {
+      toast.error("El nombre del publisher no puede estar vacío.");
+      return;
+    }
+    if (state.email.trim() === "") {
+      toast.error("El email del publisher no puede estar vacío.");
+      return;
+    }
+    if (state.password.trim() === "") {
+      toast.error("La contraseña del publisher no puede estar vacío.");
+      return;
+    }
+    if (state.nif.trim() === "") {
+      toast.error("El NIF del publisher no puede estar vacío.");
+      return;
+    }
+    if (state.address.trim() === "") {
+      toast.error("La dirección del publisher no puede estar vacío.");
+      return;
+    }
+    if (state.password !== state.confirmPassword) {
+      toast.error("Las contraseñas no coinciden.");
+      return;
+    }
 
     userService
       .requestPublsherAccess({

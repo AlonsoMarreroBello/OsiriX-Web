@@ -10,6 +10,10 @@ import authService from "../../services/AuthService";
 const ApplicationsManagerPage = () => {
   const [applicationData, setApplicationData] = useState<ApplicationData[]>([]);
 
+  /**
+   * Fetches the applications from the API
+   * @returns void
+   */
   const fetchApplications = async () => {
     let data: ApplicationData[] = [];
 
@@ -136,21 +140,41 @@ const ApplicationsManagerPage = () => {
     },
   ];
 
+  /**
+   * Handles the toggling of the publication status of an application
+   * @param id the id of the application to be toggled
+   * @returns void
+   */
   const handleTogglePublicate = async (id: number) => {
     await appService.togglePublicateApp(id);
     await fetchApplications();
   };
 
+  /**
+   * Handles the toggling of the visibility status of an application
+   * @param id the id of the application to be toggled
+   * @returns void
+   */
   const handleToggleVisibility = async (id: number) => {
     await appService.toggleAppVisibility(id);
     await fetchApplications();
   };
 
+  /**
+   * Handles the toggling of the downloadable status of an application
+   * @param id the id of the application to be toggled
+   * @returns void
+   */
   const handleToggleDownloadable = async (id: number) => {
     await appService.toggleAppDownloadable(id);
     await fetchApplications();
   };
 
+  /**
+   * Handles the click on a row in the table
+   * @param id the id of the row to be clicked
+   * @returns void
+   */
   const handleGlobalRowClick = (id: string | number) => {
     console.log("Clic en fila (global), ID:", id);
   };

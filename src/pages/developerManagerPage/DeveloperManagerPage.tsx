@@ -36,7 +36,7 @@ const DeveloperManagerPage = () => {
 
   const handleEdit = (developer: DeveloperData) => {
     setEditingDeveloper(developer);
-    setNewDeveloperName(developer.developer);
+    setNewDeveloperName(developer.name);
     setError(null);
     setIsModalOpen(true);
   };

@@ -76,6 +76,10 @@ const UserManagerPage = () => {
     },
   ];
 
+  /**
+   * Fetches all users from the API
+   * @returns void
+   */
   const fetchAllUsers = async () => {
     try {
       setUserData([]);
@@ -112,16 +116,30 @@ const UserManagerPage = () => {
     fetchAllUsers();
   }, []);
 
+  /**
+   * Handles the click on a row in the table
+   * @param id the id of the row to be clicked
+   * @returns void
+   */
   const handleGlobalRowClick = (id: string | number) => {
     console.log("Clic en fila (global), ID:", id);
   };
 
+  /**
+   * Handles the opening of the create user modal
+   * @returns void
+   */
   const openCreateModal = () => {
     setEditingUser(null);
     setNewUserForm(initialNewUserState);
     setIsModalOpen(true);
   };
 
+  /**
+   * Handles the opening of the edit user modal
+   * @param userToEdit the user to be edited
+   * @returns void
+   */
   const handleEditUser = (userToEdit: UserData) => {
     setEditingUser(userToEdit);
     const staffMember = staffList.find((s) => s.username === userToEdit.assignedStaff);
@@ -178,16 +196,25 @@ const UserManagerPage = () => {
     setIsModalOpen(true);
   };
 
+  /**
+   * Handles the closing of the modal
+   * @returns void
+   */
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingUser(null);
     setNewUserForm(initialNewUserState);
   };
 
+  /**
+   * Handles the change of an input field
+   * @param e the event object
+   * @returns void
+   */
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target;
     const name = target.name || target.id;
-    let processedValue: string | boolean | number | number[] | "" | UserType; // Renombrado para claridad
+    let processedValue: string | boolean | number | number[] | "" | UserType;
 
     if (target.type === "checkbox") {
       processedValue = (target as HTMLInputElement).checked;
@@ -227,6 +254,10 @@ const UserManagerPage = () => {
     });
   };
 
+  /**
+   * Gets the roles from the form
+   * @returns an array of role names
+   */
   const getRolesFromForm = (): string[] => {
     const roleIds = newUserForm.roleIds;
     if (roleIds) {
@@ -234,7 +265,6 @@ const UserManagerPage = () => {
         (id) => roleOptions.find((r) => r.id === id)?.roleName
       );
 
-      // Filtrar los undefined y decirle a TypeScript que el resultado es string[]
       return roleNamesWithPossibleUndefined.filter(
         (roleName): roleName is string => roleName !== undefined
       );
@@ -242,6 +272,11 @@ const UserManagerPage = () => {
     return [];
   };
 
+  /**
+   * Handles the form submission
+   * @param e the event object
+   * @returns void
+   */
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 

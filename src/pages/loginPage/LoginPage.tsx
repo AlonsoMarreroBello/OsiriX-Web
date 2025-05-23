@@ -15,13 +15,29 @@ const LoginPage = () => {
     password: "",
   });
 
+  /**
+   * Handles the change of the email input
+   * @param e the event object
+   * @returns void
+   */
   const handleEmail = (e: string) => {
     setUser((prev) => ({ ...prev, email: e }));
   };
+
+  /**
+   * Handles the change of the password input
+   * @param e the event object
+   * @returns void
+   */
   const handlePassword = (e: string) => {
     setUser((prev) => ({ ...prev, password: e }));
   };
 
+  /**
+   * Handles the login process
+   * @param event the event object
+   * @returns void
+   */
   const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

@@ -19,6 +19,10 @@ const CategoryManagerPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Fetches the categories from the API
+   * @returns void
+   */
   const fetchCategories = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -46,6 +50,10 @@ const CategoryManagerPage = () => {
     fetchCategories();
   }, [fetchCategories]);
 
+  /**
+   * Handles the opening of the add category modal
+   * @returns void
+   */
   const handleOpenAddModal = () => {
     setModalMode("add");
     setFormData({
@@ -57,6 +65,11 @@ const CategoryManagerPage = () => {
     setIsModalOpen(true);
   };
 
+  /**
+   * Handles the opening of the category modal on edit mode
+   * @param category the category to be edited
+   * @returns void
+   */
   const handleOpenEditModal = (category: CategoryData) => {
     setModalMode("edit");
     setFormData({
@@ -68,6 +81,11 @@ const CategoryManagerPage = () => {
     setIsModalOpen(true);
   };
 
+  /**
+   * Handles the deletion of a category
+   * @param categoryToDelete the category to be deleted
+   * @returns void
+   */
   const handleDeleteCategory = async (categoryToDelete: CategoryData) => {
     if (
       window.confirm(
@@ -136,15 +154,29 @@ const CategoryManagerPage = () => {
     },
   ];
 
+  /**
+   * Handles the click on a row in the table
+   * @param id the id of the row to be clicked
+   * @returns void
+   */
   const handleGlobalRowClick = (id: string | number) => {
     console.log("Clic en fila (global), ID:", id);
   };
 
+  /**
+   * Closes the modal
+   * @returns void
+   */
   const closeModal = () => {
     setIsModalOpen(false);
     setError(null);
   };
 
+  /**
+   * Handles the change of an input field
+   * @param e the event object
+   * @returns void
+   */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev: CategoryFormData) => ({
@@ -153,6 +185,10 @@ const CategoryManagerPage = () => {
     }));
   };
 
+  /**
+   * Handles the saving of a category
+   * @returns void
+   */
   const handleSaveCategory = async () => {
     if (!formData.name.trim()) {
       setError("El nombre de la categoría no puede estar vacío.");
