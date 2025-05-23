@@ -5,23 +5,39 @@ import { ApplicationData } from "../../interfaces/AplicationData.interface";
 import { TableColumn } from "../../interfaces/CustomTable.interface";
 import styles from "./AplicationsManagerPage.module.css";
 import appService from "../../services/AppService";
+import authService from "../../services/AuthService";
 
 const ApplicationsManagerPage = () => {
   const [applicationData, setApplicationData] = useState<ApplicationData[]>([]);
 
   const fetchApplications = async () => {
-    const tmp_data = await appService.getAllApps();
-    const data = tmp_data!.map((app: ApplicationData) => ({
-      id: Number(app.appId),
-      name: app.name,
-      publisher: app.publisher,
-      developer: app.developer,
-      isDownloadable: app.isDownloadable,
-      isVisible: app.isVisible,
-      isPublished: app.isPublished,
-      downloads: app.downloads,
-    }));
-    console.log(data);
+    let data: ApplicationData[] = [];
+
+    if (authService.getUserTypeFromToken() === "STAFF") {
+      const tmp_data = await appService.getAllApps();
+      data = tmp_data!.map((app: ApplicationData) => ({
+        id: Number(app.appId),
+        name: app.name,
+        publisher: app.publisher,
+        developer: app.developer,
+        isDownloadable: app.isDownloadable,
+        isVisible: app.isVisible,
+        isPublished: app.isPublished,
+        downloads: app.downloads,
+      }));
+    } else {
+      const tmp_data = await appService.getAllAppsByPublisher();
+      data = tmp_data!.map((app: ApplicationData) => ({
+        id: Number(app.appId),
+        name: app.name,
+        publisher: app.publisher,
+        developer: app.developer,
+        isDownloadable: app.isDownloadable,
+        isVisible: app.isVisible,
+        isPublished: app.isPublished,
+        downloads: app.downloads,
+      }));
+    }
 
     setApplicationData(data || []);
   };
@@ -104,15 +120,17 @@ const ApplicationsManagerPage = () => {
           >
             Alternar descarga
           </button>
-          <button
-            className={styles.actionButtonDelete}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTogglePublicate(row.id);
-            }}
-          >
-            {row.isPublished ? "Publicar" : "Desactivar"}
-          </button>
+          {authService.getUserTypeFromToken() === "STAFF" && (
+            <button
+              className={styles.actionButtonDelete}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTogglePublicate(row.id);
+              }}
+            >
+              {row.isPublished ? "Desactivar" : "Publicar"}
+            </button>
+          )}
         </div>
       ),
     },

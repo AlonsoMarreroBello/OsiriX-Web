@@ -25,12 +25,12 @@ function App() {
           <Route element={<ProtectedRoute allowedUserTypes={["STAFF", "PUBLISHER"]} />}>
             <Route path="/home" element={<UserHomePage />} />
             <Route path="/request-manager" element={<RequestManagerPage />} />
+            <Route path="/aplication-manager" element={<ApplicationsManagerPage />} />
           </Route>
           {/* Admin routes */}
           <Route element={<ProtectedRoute allowedUserTypes={["STAFF"]} />}>
             <Route path="/user-manager" element={<UserManagerPage />} />
             <Route path="/developer-manager" element={<DeveloperManagerPage />} />
-            <Route path="/aplication-manager" element={<ApplicationsManagerPage />} />
             <Route path="/category-manager" element={<CategoryManagerPage />} />
           </Route>
           {/* Publisher routes */}

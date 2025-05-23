@@ -56,6 +56,10 @@ const NewRequestModal = ({
       setIsAdmin(true);
     }
 
+    /**
+     * The function fetches categories from a service, maps the data, and sets the categories in the
+     * state.
+     */
     const fetchCategories = async () => {
       try {
         const tmp_categories = await categoryService.getAllCategories();
@@ -71,6 +75,10 @@ const NewRequestModal = ({
       }
     };
 
+    /**
+     * The function fetches developers data from an API, processes it, and sets the result in the state
+     * variable.
+     */
     const fetchDevelopers = async () => {
       try {
         const tmp_developers = await developerService.getAllDevelopers();
@@ -113,6 +121,17 @@ const NewRequestModal = ({
     }
   }, [requestToManage]);
 
+  /**
+   * The `handleInputChange` function in TypeScript React is used to handle input changes and update
+   * state based on the input element's name or id attribute.
+   *
+   * @param e - The `e` parameter in the `handleInputChange` function is of type `React.ChangeEvent`
+   * and can be an event from an `input`, `textarea`, or `select` elemet. It represents the
+   * change event that occurs when the value of the input, textarea, or select element is changed.
+   *
+   * @returns The `handleInputChange` function is returning different values based on the conditions
+   * met within the function. Here is a breakdown of the possible return values:
+   */
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -154,6 +173,12 @@ const NewRequestModal = ({
     console.log(actualRequest);
   };
 
+  /**
+   * The function `handleFileChange` validates and sets file inputs based on their expected file types.
+   * @param e - The parameter `e` in the `handleFileChange` function is of type
+   * `React.ChangeEvent<HTMLInputElement>`. This parameter represents the event that occurs when the
+   * value of an input element changes, specifically for an `<input>` element of type `file`.
+   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     const inputId = e.target.id;
@@ -182,10 +207,16 @@ const NewRequestModal = ({
     }
   };
 
+  /**
+   * The `handleSubmit` function handles form submission by making requests based on the request
+   * type and editing status.
+   *
+   * @param e - The `e` parameter in the `handleSubmit` function is of type
+   * `React.FormEvent<HTMLFormElement>`. This parameter represents the form event that is being handled
+   * by the function.
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem("requestToManage", JSON.stringify(actualRequest));
-    console.log("Enviando solicitud", actualRequest);
 
     if (requestType === RequestType.AppUpload) {
       if (!isEditing) {
@@ -220,6 +251,8 @@ const NewRequestModal = ({
           requestId: actualRequest.id,
           appId: actualRequest.app?.appId,
         });
+      } else {
+        requestService.updateRequest(actualRequest);
       }
     } else {
       if (!isEditing) {
@@ -232,6 +265,12 @@ const NewRequestModal = ({
     handleClose();
   };
 
+  /** function component that renders a standard form with two
+   * input fields. The first input field is for the title of a request, and the second input field is
+   * for the body of the request. The form fields are populated with values from the `actualRequest`
+   * object and have corresponding `onChange` event handlers to update the state when the user inputs
+   * data. The form fields are required and may be disabled based on the `isAdmin` flag.
+   */
   const renderStandardForm = () => (
     <>
       <InputField
@@ -257,6 +296,11 @@ const NewRequestModal = ({
     </>
   );
 
+  /** The component that renders a form for uploading an application.The form fields are populated
+   * with data from the `actualRequest` object and allow for user interaction through onChange and
+   * onClick event handlers. The form also includes conditional rendering based on certain conditions
+   * like isAdmin status andwhether the form is in editing mode.
+   */
   const renderAppUploadForm = () => (
     <>
       <InputField

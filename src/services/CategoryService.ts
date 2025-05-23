@@ -1,6 +1,7 @@
 import axios from "axios";
 import { CategoryData, CategoryRequestDto, CategoryType } from "../interfaces/Category.interface";
 import authService from "./AuthService";
+import { toast } from "react-toastify";
 
 interface CategoryResponseDto {
   categoryId: number;
@@ -46,6 +47,7 @@ const createCategory = async (categoryData: CategoryRequestDto) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Categoría creada correctamente.");
       return response.data.data as CategoryData;
     } else {
       console.warn(
@@ -56,6 +58,7 @@ const createCategory = async (categoryData: CategoryRequestDto) => {
     }
   } catch (err) {
     console.error("Error al crear categoría:", err);
+    toast.error("No se pudo crear la categoría. Inténtalo de nuevo.");
     throw err;
   }
 };
@@ -69,16 +72,18 @@ const deleteCategory = async (id: number) => {
       },
     });
 
-    if (response.data && response.data.data) {
+    if (response) {
+      toast.success("Categoría eliminada correctamente.");
       return response.data.data as CategoryData;
     } else {
       console.warn(
         "La respuesta de la API no tiene la estructura esperada (response.data.data).",
-        response.data
+        response
       );
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo eliminar la categoría. Inténtalo de nuevo.");
     console.error("Error al eliminar categoría:", err);
     throw err;
   }

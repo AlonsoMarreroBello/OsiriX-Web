@@ -2,6 +2,7 @@ import axios from "axios";
 import authService from "./AuthService";
 import { Application, FullRequestData } from "../interfaces/RequestData.interface";
 import developerService from "./DeveloperService";
+import { toast } from "react-toastify";
 
 const getAllRequests = async () => {
   try {
@@ -130,6 +131,7 @@ const createRequest = async (request: FullRequestData) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Solicitud creada correctamente.");
       return response.data.data as FullRequestData;
     } else {
       console.warn(
@@ -139,6 +141,7 @@ const createRequest = async (request: FullRequestData) => {
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo crear la solicitud. Inténtalo de nuevo.");
     console.error("Error al crear una solicitud:", err);
     throw err;
   }
@@ -165,6 +168,7 @@ const updateRequest = async (request: FullRequestData) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Solicitud actualizada correctamente.");
       return response.data.data as FullRequestData;
     } else {
       console.warn(
@@ -174,6 +178,7 @@ const updateRequest = async (request: FullRequestData) => {
       return null;
     }
   } catch (error) {
+    toast.error("No se pudo actualizar la solicitud. Inténtalo de nuevo.");
     console.error("Error al obtener las solicitudes:", error);
     return null;
   }
@@ -212,6 +217,7 @@ const createApp = async (app: Application) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Información de la aplicación enviada correctamente.");
       return response.data.data;
     } else {
       console.warn(
@@ -221,6 +227,7 @@ const createApp = async (app: Application) => {
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo enviar la información de la aplicación. Inténtalo de nuevo.");
     console.error("Error al crear una aplicación:", err);
     throw err;
   }
@@ -252,6 +259,7 @@ const createPublicationRequest = async (
     );
 
     if (response.data && response.data.data) {
+      toast.success("Solicitud de publicación creada correctamente.");
       return response.data.data as FullRequestData;
     } else {
       console.warn(
@@ -261,6 +269,7 @@ const createPublicationRequest = async (
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo crear la solicitud de publicación. Inténtalo de nuevo.");
     console.error("Error al crear una solicitud de publicación:", err);
     throw err;
   }
@@ -296,6 +305,7 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
     } else {
       console.warn("El archivo zip (zip) es null o undefined. No se adjuntará 'zipFile'.");
     }
+    toast.info("Subiendo archivos, por favor, no cierre o salga de la página.");
 
     const response = await axios.post(
       "http://localhost:8080/api/v1/batch-upload/" + appId,
@@ -310,6 +320,7 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
     console.log(response);
 
     if (response.data) {
+      toast.success("Archivos subidos correctamente.");
       return response.data;
     } else {
       console.warn(
@@ -319,6 +330,7 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
       return null;
     }
   } catch (err) {
+    toast.error("No se pudieron subir los archivos. Inténtalo de nuevo.");
     console.error("Error al subir archivos en lote:", err);
     throw err;
   }

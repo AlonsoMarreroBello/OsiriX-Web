@@ -215,6 +215,7 @@ const RequestManagerPage = () => {
     setIsEditing(false);
     setRequestToManage(defaultRequest);
     setRequestType(RequestType.Standard);
+    fetchRequests();
   };
 
   const handleRequestTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

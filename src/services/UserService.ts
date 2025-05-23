@@ -6,6 +6,7 @@ import {
   staffRequestDto,
   UserRequestDto,
 } from "../interfaces/UserData.interface";
+import { toast } from "react-toastify";
 
 interface UserData extends BaseDataRow {
   id: number;
@@ -202,6 +203,7 @@ const createUser = async (userData: UserRequestDto) => {
     });
 
     if (response.data && response.data.data) {
+      toast.success("Usuario creado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(
@@ -243,6 +245,7 @@ const createStaff = async (userData: staffRequestDto) => {
     });
 
     if (response.data && response.data.data) {
+      toast.success("Usuario creado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(
@@ -282,6 +285,7 @@ const createPublisher = async (userData: publisherRequestDto) => {
     });
 
     if (response.data && response.data.data) {
+      toast.success("Usuario creado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(
@@ -332,6 +336,7 @@ const updateUser = async (id: number, userData: UserRequestDto) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Usuario actualizado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(
@@ -382,6 +387,7 @@ const updateStaff = async (id: number, userData: staffRequestDto) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Usuario actualizado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(
@@ -429,6 +435,7 @@ const updatePublisher = async (id: number, userData: publisherRequestDto) => {
     );
 
     if (response.data && response.data.data) {
+      toast.success("Usuario actualizado correctamente.");
       return response.data.data as UserData;
     } else {
       console.warn(

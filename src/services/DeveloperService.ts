@@ -1,6 +1,7 @@
 import axios from "axios";
 import { DeveloperData, DeveloperRequestDto } from "../interfaces/Developer.interface";
 import authService from "./AuthService";
+import { toast } from "react-toastify";
 
 const getAllDevelopers = async (): Promise<DeveloperData[] | null> => {
   try {
@@ -12,7 +13,7 @@ const getAllDevelopers = async (): Promise<DeveloperData[] | null> => {
     });
 
     if (response.data && response.data.data) {
-      return response.data.data as DeveloperData[];
+      return response.data.data.sort((a: DeveloperData, b: DeveloperData) => a.id! - b.id!);
     } else {
       console.warn(
         "La respuesta de la API no tiene la estructura esperada (response.data.data).",
@@ -36,6 +37,7 @@ const createDeveloper = async (developerData: DeveloperRequestDto) => {
     });
 
     if (response.data && response.data.data) {
+      toast.success("Desarrollador creado correctamente.");
       return response.data.data as DeveloperData;
     } else {
       console.warn(
@@ -45,6 +47,7 @@ const createDeveloper = async (developerData: DeveloperRequestDto) => {
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo crear el desarrollador. Inténtalo de nuevo.");
     console.error("Error al crear desarrollador:", err);
     throw err;
   }
@@ -59,16 +62,18 @@ const deleteDeveloper = async (id: number) => {
       },
     });
 
-    if (response.data && response.data.data) {
+    if (response) {
+      toast.success("Desarrollador eliminado correctamente.");
       return response.data.data as DeveloperData;
     } else {
       console.warn(
         "La respuesta de la API no tiene la estructura esperada (response.data.data).",
-        response.data
+        response
       );
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo eliminar el desarrollador. Inténtalo de nuevo.");
     console.error("Error al eliminar desarrollador:", err);
     throw err;
   }
@@ -91,6 +96,7 @@ const updateDeveloper = async (
     );
 
     if (response.data && response.data.data) {
+      toast.success("Desarrollador actualizado correctamente.");
       return response.data.data as DeveloperData;
     } else {
       console.warn(
@@ -100,6 +106,7 @@ const updateDeveloper = async (
       return null;
     }
   } catch (err) {
+    toast.error("No se pudo actualizar el desarrollador. Inténtalo de nuevo.");
     console.error(`Error al actualizar desarrollador con ID ${id}:`, err);
     throw err;
   }
