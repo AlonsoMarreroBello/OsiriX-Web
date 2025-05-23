@@ -24,6 +24,10 @@ const CustomTable = <T extends BaseDataRow>({
     direction: "ascending",
   });
 
+  /**
+   * Fetches the paginated data from the data array
+   * @returns the paginated data
+   */
   const paginatedData = useMemo(() => {
     const start = currentPage * pageSize;
     const end = start + pageSize;
@@ -32,6 +36,9 @@ const CustomTable = <T extends BaseDataRow>({
 
   const totalPages = Math.ceil(data.length / pageSize);
 
+  /**
+   * Sorted data from the paginated data
+   */
   const sortedData = useMemo(() => {
     const sortableItems = [...paginatedData];
     if (sortConfig.key) {
@@ -61,6 +68,11 @@ const CustomTable = <T extends BaseDataRow>({
     return sortableItems;
   }, [paginatedData, sortConfig]);
 
+  /**
+   * Requests a sort on the data
+   * @param key the key of the column to be sorted
+   * @returns void
+   */
   const requestSort = useCallback(
     (key: keyof T) => {
       let direction: "ascending" | "descending" = "ascending";
@@ -75,18 +87,34 @@ const CustomTable = <T extends BaseDataRow>({
     [sortConfig]
   );
 
+  /**
+   * Gets the sort icon for a column
+   * @param columnKey the key of the column
+   * @returns the sort icon
+   */
   const getSortIcon = (columnKey: keyof T) => {
     if (sortConfig.key !== columnKey) return <IconSortDefault />;
     if (sortConfig.direction === "ascending") return <IconSortAsc />;
     return <IconSortDesc />;
   };
 
+  /**
+   * Handles the click on a row
+   * @param rowId the id of the row
+   * @returns void
+   */
   const handleEffectiveRowClick = (rowId: string | number) => {
     if (onRowClick) {
       onRowClick(rowId);
     }
   };
 
+  /**
+   * Gets the value of a cell
+   * @param row the row
+   * @param col the column
+   * @returns the value of the cell
+   */
   const getCellValue = (row: T, col: TableColumn<T>): React.ReactNode => {
     if (col.type === "actions") {
       return col.renderActions(row);

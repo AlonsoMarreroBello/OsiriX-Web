@@ -4,8 +4,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import authService from "../../services/AuthService.ts";
 
 interface ProtectedRouteProps {
-  allowedUserTypes: string[]; // Array de userType permitidos (ej. ["STAFF", "PUBLISHER"])
-  children?: React.ReactNode; // Para anidar rutas si usas <Outlet />
+  allowedUserTypes: string[];
+  children?: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedUserTypes, children }) => {

@@ -5,6 +5,7 @@ import authService from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import logoUrl from "../../assets/OsiriX-Logo.png";
 import { toast } from "react-toastify";
+import notificationService from "../../services/notificationService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const LoginPage = () => {
               setError("");
             }, 3000);
           } else {
+            notificationService.showNotifications();
             navigate("/home");
           }
         })

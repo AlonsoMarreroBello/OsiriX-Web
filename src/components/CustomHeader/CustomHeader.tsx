@@ -10,6 +10,10 @@ const CustomHeader = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    /**
+     * The function checks if the user is logged in or not
+     * @returns void
+     */
     const checkLogin = () => {
       const token_tmp = authService.getToken();
       let token;
