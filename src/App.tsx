@@ -10,6 +10,7 @@ import DeveloperManagerPage from "./pages/developerManagerPage/DeveloperManagerP
 import ApplicationsManagerPage from "./pages/aplicationsManagerPage/AplicationsManagerPage";
 import CategoryManagerPage from "./pages/categoryManagerPage/CategoryManagerPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -35,6 +36,21 @@ function App() {
           {/* Publisher routes */}
           <Route element={<ProtectedRoute allowedUserTypes={["PUBLISHER"]} />}></Route>
         </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          draggable
+          pauseOnHover
+          toastStyle={{
+            backgroundColor: "#3E474F",
+            boxShadow: " 0 0 15px 0 var(--color-accent-vibrant-green-shadow)",
+          }}
+          theme="dark"
+        />
       </BrowserRouter>
     </>
   );

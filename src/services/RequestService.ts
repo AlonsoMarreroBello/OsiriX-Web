@@ -1,7 +1,6 @@
 import axios from "axios";
 import authService from "./AuthService";
 import { Application, FullRequestData } from "../interfaces/RequestData.interface";
-import { ApplicationData } from "../interfaces/AplicationData.interface";
 import developerService from "./DeveloperService";
 
 const getAllRequests = async () => {
@@ -283,6 +282,7 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
     if (images && images.length > 0) {
       images.forEach((file) => {
         formData.append("imageFiles", file, "image.jpg");
+        console.log(`Se adjuntaron ${images.length} archivos como 'imageFiles' a FormData.`);
       });
       console.log(`Se adjuntaron ${images.length} archivos como 'imageFiles' a FormData.`);
     } else {
@@ -292,11 +292,10 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
     }
     if (zip) {
       formData.append("zipFile", zip, "data.zip");
+      console.log(`Se adjuntaron ${images.length} archivos como 'imageFiles' a FormData.`);
     } else {
       console.warn("El archivo zip (zip) es null o undefined. No se adjuntará 'zipFile'.");
     }
-
-    formData.append("zip", zip, "data.zip");
 
     const response = await axios.post(
       "http://localhost:8080/api/v1/batch-upload/" + appId,
@@ -308,8 +307,10 @@ const batchUploadFiles = async (appId: number, icon: File, images: File[], zip: 
       }
     );
 
-    if (response.data && response.data.data) {
-      return response.data.data as ApplicationData;
+    console.log(response);
+
+    if (response.data) {
+      return response.data;
     } else {
       console.warn(
         "La respuesta de la API no tiene la estructura esperada (response.data.data).",

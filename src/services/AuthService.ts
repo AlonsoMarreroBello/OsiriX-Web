@@ -1,5 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 export interface AuthLoginRequestDto {
   email: string;
@@ -34,11 +35,14 @@ const login = async (credentials: AuthLoginRequestDto) => {
     const response = await axios.post(`${API_PORT}/auth/login`, credentials);
     if (response.data.data.token.userType !== "USER") {
       localStorage.setItem("token", response.data.data.token);
+      toast.success("Sesión iniciada");
     } else {
       clearToken();
+      toast.error("Usuario o contraseña incorrectos");
     }
   } catch (error) {
     console.error(error);
+    toast.error("Usuario o contraseña incorrectos");
   }
 };
 

@@ -5,6 +5,7 @@ import authService from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import logoUrl from "../../assets/OsiriX-Logo.png";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const LoginPage = () => {
         .login({ ...user, origin: "WEB" })
         .then(() => {
           if (authService.getUserTypeFromToken() === "USER") {
+            toast.error("Usuario no autorizado");
             setError("Usuario no autorizado");
             setTimeout(() => {
               setError("");
@@ -40,6 +42,7 @@ const LoginPage = () => {
         })
         .catch((error) => {
           console.error(error);
+          toast.error("Error al loguear");
         });
     } catch (error) {
       console.error(error);
