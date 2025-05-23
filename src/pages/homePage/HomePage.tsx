@@ -2,7 +2,7 @@ import styles from "./HomePage.module.css";
 import CustomHeader from "../../components/CustomHeader/CustomHeader";
 
 const HomePage = () => {
-  const windowsInstallerUrl = "/installers/YourAppSetup.exe";
+  const windowsInstallerUrl = "/src/downloads/OsiriX.exe";
 
   return (
     <div className={styles.container}>
