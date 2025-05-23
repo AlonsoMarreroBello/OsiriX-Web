@@ -1,0 +1,161 @@
+/* CustomHeader.css */
+
+.container-header {
+  /* Fondo que combine con el #1A1D21 de la página, o un poco más oscuro para distinción */
+  background-color: var(--color-bg-header);
+  /* Un negro/gris muy oscuro, más oscuro que el fondo principal de la página */
+  display: flex;
+  align-items: center;
+  /* Alinea verticalmente los ítems */
+  justify-content: space-between;
+  /* Distribuye el espacio: logo+título a la izq, nav a la der */
+  width: 100%;
+  position: static;
+  /* Fijar el header en la parte superior */
+  top: 0;
+  left: 0;
+  /* Asegurar que ocupe todo el ancho */
+  z-index: 1000;
+  /* Padding ajustado (vertical, horizontal) */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Sombra más notoria para header fijo */
+  height: 70px;
+  /* Altura fija para el header (ajustar según necesidad) */
+}
+
+.logo-title-container {
+  /* Nuevo contenedor para agrupar logo y título */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  /* Espacio entre logo y título */
+}
+
+.container-header img {
+  height: 40px;
+  margin-left: 1rem;
+  display: block;
+  /* Evitar espacio extra debajo de la imagen */
+}
+
+.container-header .logo-title-container h1 {
+  margin: 0;
+  font-size: 1.8em;
+  /* Tamaño de fuente del título ajustado */
+  font-weight: 600;
+  /* Peso de fuente */
+  color: var(--color-white);
+  /* Blanco brillante para el título principal */
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.container-header .logo-title-container h1:hover {
+  color: #A6E1FA;
+  /* Azul hielo al pasar el mouse, como en los enlaces */
+}
+
+.container-header nav {
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+}
+
+.container-header nav ul {
+  /* Añadir 'nav' como contenedor semántico para la lista */
+  display: flex;
+  align-items: center;
+  /* Alinear ítems de la lista verticalmente */
+  margin: 0;
+  /* Resetear margen de ul */
+  padding: 0;
+  /* Resetear padding de ul */
+  list-style: none;
+  /* Quitar viñetas (ya lo tenías, pero es bueno confirmarlo en 'ul') */
+}
+
+.container-header nav li {
+  margin-left: 1.5rem;
+  /* Espacio a la izquierda de cada ítem, excepto el primero */
+  /* margin-right: 1rem; (cambiado a margin-left para mejor control) */
+}
+
+.container-header nav li:first-child {
+  margin-left: 0;
+  /* Sin margen para el primer elemento */
+}
+
+.container-header nav li a {
+  color: var(--color-accent-pastel-main);
+  /* Color azul hielo para los enlaces */
+  text-decoration: none;
+  /* Quitar subrayado por defecto */
+  font-size: 1em;
+  /* Tamaño de fuente de los enlaces */
+  font-weight: 500;
+  /* Peso de fuente para enlaces */
+  padding: 0.5em 0.25em;
+  /* Padding para hacer el área clickeable un poco más grande */
+  position: relative;
+  /* Para el pseudo-elemento del hover */
+  transition: color 0.2s ease-in-out;
+}
+
+.container-header nav li a:hover,
+.container-header nav li a:focus {
+  color: var(--color-white);
+  /* Blanco al pasar el mouse/foco */
+  outline: none;
+  /* Quitar outline por defecto si se maneja de otra forma */
+}
+
+/* Efecto de subrayado sutil en hover/focus para los enlaces de navegación */
+.container-header nav li a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: -2px;
+  /* Posición del subrayado */
+  left: 0;
+  background-color: var(--color-accent-vibrant-green-main);
+  /* VERDE del CTA como acento sutil en el header */
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.container-header nav li a:hover::after,
+.container-header nav li a:focus::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+
+/* Consideraciones para Responsive (Ejemplo muy básico) */
+/* Si tienes muchos ítems de menú, necesitarás un menú hamburguesa para móviles */
+@media (max-width: 768px) {
+  .container-header {
+    padding: 0.75rem 1rem;
+    /* Menos padding en móviles */
+    height: 60px;
+    /* Header un poco más pequeño */
+  }
+
+  .container-header .logo-title-container h1 {
+    font-size: 1.5em;
+    /* Título más pequeño */
+  }
+
+  .container-header img {
+    height: 32px;
+  }
+
+  .container-header nav li {
+    margin-left: 1rem;
+  }
+
+  .container-header nav li a {
+    font-size: 0.9em;
+  }
+}

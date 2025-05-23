@@ -1,0 +1,157 @@
+/* PublisherPortalPage.module.css */
+
+.container {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.CustomHeader {
+  width: 100%;
+}
+
+
+.main {
+  width: 90%;
+  max-width: 600px;
+  padding-bottom: 3rem;
+}
+
+.main>h1 {
+  color: var(--color-text-headings-light);
+  font-size: 2.2em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.wrapper {
+  background-color: var(--color-bg-secondary);
+  padding: 0;
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 0 40px var(--color-accent-vibrant-green-shadow-hover);
+}
+
+.formHeader {
+  padding: 1.25rem 2rem;
+  background-color: var(--color-accent-pastel-main);
+  /* Mantenemos Azul Hielo Pastel */
+  color: var(--color-text-on-pastel);
+  border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+  /* OPCIONAL: Un borde inferior verde sutil */
+  /* border-bottom: 2px solid var(--color-accent-vibrant-green-main); */
+}
+
+.formHeader h2 {
+  font-weight: 600;
+  font-size: 1.4em;
+  margin: 0;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2.5rem 2.5rem;
+  gap: 1.8rem;
+  align-items: stretch;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Los estilos de InputField están en su propio módulo y ya usan el foco verde */
+
+.button {
+  /* CAMBIO: Botón principal con verde vibrante */
+  background-color: var(--color-accent-vibrant-green-main);
+  border: none;
+  color: var(--color-text-on-accent-vibrant);
+  /* Texto blanco o muy oscuro, según contraste con verde vibrante */
+  padding: 0.85rem 2rem;
+  font-size: 1.05em;
+  font-weight: 700;
+  /* Más peso para el CTA principal */
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--border-radius-small);
+  width: auto;
+  align-self: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  min-width: 220px;
+  /* Ancho mínimo para buena presencia */
+  box-shadow: 0 3px 8px var(--color-accent-vibrant-green-shadow);
+  /* Sombra verde */
+  text-transform: uppercase;
+  /* Para darle más énfasis al CTA */
+  letter-spacing: 0.5px;
+}
+
+.button:hover,
+.button:focus {
+  background-color: var(--color-accent-vibrant-green-dark);
+  /* Verde vibrante más oscuro */
+  /* color: var(--color-text-on-accent-vibrant); (mantener si el contraste sigue siendo bueno) */
+  transform: translateY(-3px) scale(1.02);
+  /* Efecto más notorio */
+  box-shadow: 0 6px 15px var(--color-accent-vibrant-green-shadow-hover);
+  /* Sombra verde más intensa */
+  outline: none;
+}
+
+.button:active {
+  background-color: var(--color-accent-vibrant-green-darker);
+  transform: translateY(0) scale(1);
+  box-shadow: 0 3px 8px var(--color-accent-vibrant-green-shadow);
+}
+
+.form p {
+  color: var(--color-text-tertiary);
+  font-size: 0.95em;
+  text-align: center;
+  margin: 0;
+}
+
+.form p a {
+  /* Enlace "Iniciar sesión" */
+  color: var(--color-accent-pastel-main);
+  /* Color base azul pastel */
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.2em 0.1em;
+  border-radius: var(--border-radius-small);
+  /* Para que el hover del fondo se vea bien */
+  transition: color 0.2s ease, background-color 0.2s ease;
+  /* Añadir background-color a la transición */
+}
+
+.form p a:hover,
+.form p a:focus {
+  /* CAMBIO: Hover del enlace con un toque verde sutil */
+  color: var(--color-accent-vibrant-green-main);
+  /* Fondo verde */
+  /* text-decoration: underline; (opcional, el cambio de fondo ya es un buen indicador) */
+  outline: none;
+  /* Aumentar padding en hover para que el fondo sea más visible */
+}
+
+/* Responsive para los Input Groups */
+@media (min-width: 600px) {
+  .inputGroup {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .inputGroup>div {
+    flex: 1;
+  }
+}

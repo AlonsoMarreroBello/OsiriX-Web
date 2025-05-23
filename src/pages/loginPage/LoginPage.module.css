@@ -1,0 +1,227 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-bg-primary);
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- Paneles --- */
+.leftPanel,
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transition:
+    transform 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    z-index 0s linear 0.6s;
+  height: 100vh;
+  box-sizing: border-box;
+  position: absolute;
+  width: 50%;
+  top: 0;
+}
+
+.leftPanel {
+  background-color: var(--color-bg-secondary);
+  left: 0;
+  transform: translateX(0%);
+  z-index: 12;
+}
+
+.rightPanel {
+  background-color: var(--color-bg-primary);
+  right: 0;
+  transform: translateX(0%);
+  z-index: 5;
+}
+
+.leftPanel.leftPanelShifted {
+  transform: translateX(100%);
+  z-index: 12;
+}
+
+.rightPanel.rightPanelShifted {
+  transform: translateX(-100%);
+  z-index: 10;
+}
+
+/* --- Panel Izquierdo --- */
+.logo {
+  height: auto;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 15px var(--color-accent-pastel-shadow));
+}
+
+.quote {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  text-align: center;
+  max-width: 300px;
+}
+
+/* --- Panel Derecho (formularios) --- */
+.formWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition:
+    opacity 0.4s ease-in-out 0.4s,
+    transform 0.4s ease-in-out 0.4s,
+    visibility 0s linear 0.8s;
+}
+
+/* Mostrar formulario activo */
+.rightPanel .loginForm,
+.rightPanel.rightPanelShifted .registerForm {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+/* Ocultar formulario inactivo */
+.rightPanel.rightPanelShifted .loginForm,
+.rightPanel .registerForm:not(.rightPanel.rightPanelShifted .registerForm) {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out,
+    visibility 0.6s linear 0.3s;
+  transition-delay: 0s;
+}
+
+/* Estado base por defecto */
+.rightPanel .loginForm {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 10;
+  transition-delay: 0s;
+}
+
+.rightPanel .registerForm {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  z-index: 5;
+  transition-delay: 0s;
+}
+
+.rightPanel.rightPanelShifted .loginForm {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  z-index: 5;
+  transition-delay: 0s;
+}
+
+.rightPanel.rightPanelShifted .registerForm {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 10;
+  transition-delay: 0.4s;
+}
+
+/* --- Formulario --- */
+.formContainer {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  border-radius: var(--border-radius-large);
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  color: var(--color-text-primary);
+  padding: 0.6rem 1.5rem;
+  border: 2px solid var(--color-accent-vibrant-green-darker);
+  border-radius: var(--border-radius-medium);
+  text-align: center;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.forgotPassword {
+  color: var(--color-accent-pastel-text-link);
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  align-self: flex-start;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+.forgotPassword {
+  color: var(--color-accent-pastel-main);
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+  color: var(--color-accent-vibrant-green-main)
+}
+
+.loginButton {
+  border: none;
+  color: var(--color-text-on-accent-vibrant);
+  padding: 0.85rem 2rem;
+  font-size: 1.05em;
+  font-weight: 700;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--border-radius-small);
+  width: auto;
+  align-self: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  min-width: 220px;
+  box-shadow: 0 3px 8px var(--color-accent-vibrant-green-shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--color-accent-vibrant-green-main);
+}
+
+.loginButton:hover,
+.loginButton:focus {
+  background-color: var(--color-accent-vibrant-green-dark);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 15px var(--color-accent-vibrant-green-shadow-hover);
+  outline: none;
+}
+
+.loginButton:active {
+  background-color: var(--color-accent-vibrant-green-darker);
+  transform: translateY(0) scale(1);
+  box-shadow: 0 3px 8px var(--color-accent-vibrant-green-shadow);
+}

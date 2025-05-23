@@ -1,29 +1,57 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/homePage/HomePage";
+import PublisherPortalPage from "./pages/publisherPortalPage/PublisherPortalPage";
+import LoginPage from "./pages/loginPage/LoginPage";
+import UserHomePage from "./pages/userHomePage/UserHomePage";
+import RequestManagerPage from "./pages/requestManager/RequestManagerPage";
+import UserManagerPage from "./pages/userManagerPage/UserManagerPage";
+import DeveloperManagerPage from "./pages/developerManagerPage/DeveloperManagerPage";
+import ApplicationsManagerPage from "./pages/aplicationsManagerPage/AplicationsManagerPage";
+import CategoryManagerPage from "./pages/categoryManagerPage/CategoryManagerPage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/publishers" element={<PublisherPortalPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute allowedUserTypes={["STAFF", "PUBLISHER"]} />}>
+            <Route path="/home" element={<UserHomePage />} />
+            <Route path="/request-manager" element={<RequestManagerPage />} />
+            <Route path="/aplication-manager" element={<ApplicationsManagerPage />} />
+          </Route>
+          {/* Admin routes */}
+          <Route element={<ProtectedRoute allowedUserTypes={["STAFF"]} />}>
+            <Route path="/user-manager" element={<UserManagerPage />} />
+            <Route path="/developer-manager" element={<DeveloperManagerPage />} />
+            <Route path="/category-manager" element={<CategoryManagerPage />} />
+          </Route>
+          {/* Publisher routes */}
+          <Route element={<ProtectedRoute allowedUserTypes={["PUBLISHER"]} />}></Route>
+        </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          draggable
+          pauseOnHover
+          toastStyle={{
+            backgroundColor: "#3E474F",
+            boxShadow: " 0 0 15px 0 var(--color-accent-vibrant-green-shadow)",
+          }}
+          theme="dark"
+        />
+      </BrowserRouter>
     </>
   );
 }

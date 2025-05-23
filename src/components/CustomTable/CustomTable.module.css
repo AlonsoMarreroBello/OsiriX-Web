@@ -1,0 +1,160 @@
+.tableWrapper {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 4px 12px var(--shadow-default);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableScrollContainer {
+  width: 100%;
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.tableScrollContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tableScrollContainer::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+.tableScrollContainer::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-secondary);
+  border-radius: 4px;
+}
+
+.tableScrollContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-pastel-main);
+}
+
+.customTable {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: collapse;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.customTable th,
+.customTable td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-secondary);
+  white-space: nowrap;
+}
+
+.customTable thead th {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.sortableHeader {
+  cursor: pointer;
+}
+
+.sortableHeader:hover {
+  background-color: var(--color-bg-input);
+}
+
+.sortIcon {
+  margin-left: 0.5em;
+  font-size: 0.8em;
+  color: var(--color-text-tertiary);
+  vertical-align: middle;
+}
+
+.customTable thead th:hover .sortIcon {
+  color: var(--color-accent-vibrant-green-main);
+}
+
+.tableRow {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.tableRow[role="button"] {
+  cursor: pointer;
+}
+
+.tableRow:hover {
+  background-color: var(--color-accent-pastel-shadow);
+}
+
+.noRows {
+  text-align: center !important;
+  padding: 2rem !important;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+.actionsCell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.actionButton {
+  background-color: var(--color-bg-input);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-secondary);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.pagination button,
+.pagination select {
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-small);
+  padding: 0.4em 0.8em;
+  margin: 0 0.5em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled),
+.pagination select:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-accent-vibrant-green-main);
+}
+
+.pagination button:disabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination select {
+  min-width: 120px;
+}
